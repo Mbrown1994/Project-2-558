@@ -149,11 +149,20 @@ Videos <- ggplot(Data, aes(x = num_videos, y= shares)) + geom_point(shape = 18, 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
 Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_point(shape = 18, color = "blue")
 print(Images)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-20-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- --> \#\#
+Splitting the data  
+\#\#\# In this section we split the data - 70% train and 30% test
+
+``` r
+library(caret)
+DataIndex<-createDataPartition(y = Data$shares, p = 0.7, list = FALSE)  
+TrainData <- Data[DataIndex,]  
+TestData <- Data[-DataIndex,]  
+```
