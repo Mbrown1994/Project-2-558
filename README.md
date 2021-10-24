@@ -149,16 +149,18 @@ Videos <- ggplot(Data, aes(x = num_videos, y= shares)) + geom_point(shape = 18, 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_point(shape = 18, color = "blue")
 print(Images)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- --> \#\#
-Splitting the data  
-\#\#\# In this section we split the data - 70% train and 30% test
+![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+
+## Splitting the data
+
+### In this section we split the data - 70% train and 30% test
 
 ``` r
 library(caret)
