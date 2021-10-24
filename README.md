@@ -3,7 +3,9 @@ Project Two
 Mary Brown and Jennifer Relihan
 10/21/2021
 
-## Read in the data and learn about the dimensions as well as different column names.
+## Data
+
+### Read in the data and learn about the dimensions as well as different column names.
 
 ``` r
 library(magrittr)
@@ -40,7 +42,9 @@ names(Data)
     ## [58] "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
     ## [61] "shares"
 
-## Subset the data by channels and create a vector of all of the channels we are interested in.
+## Subset
+
+### Sunset the data by channels and create a vector of all of the channels we are interested in.
 
 ``` r
 EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %>% select(-starts_with("data_channel_is_"))  
@@ -48,7 +52,9 @@ EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %
 AllChannels <- Data %>% select(starts_with("data_channel_is_")) %>% names  
 ```
 
-## Here we produced some summary statistics and graphs of the data. First, we looked at a full summary on each column of our data. Next, we decided to specifically look further into total shares by days of the week. In order to do summaries on days of the week, we needed to gather the days/values by shares and filter by true values. The first summary shows the standard deviation, average, median, and IQR for each day of the week by shares. The second summary shows the same summary statistics for each day of the week by minimum amount of shares.
+## Summary Statistics
+
+### Here we produced some summary statistics and graphs of the data. First, we looked at a full summary on each column of our data. Next, we decided to specifically look further into total shares by days of the week. In order to do summaries on days of the week, we needed to gather the days/values by shares and filter by true values. The first summary shows the standard deviation, average, median, and IQR for each day of the week by shares. The second summary shows the same summary statistics for each day of the week by minimum amount of shares.
 
 ``` r
 library(tidyverse)
