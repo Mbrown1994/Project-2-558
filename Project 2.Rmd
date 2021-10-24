@@ -21,5 +21,13 @@ EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %
 AllChannels <- Data %>% select(starts_with("data_channel_is_")) %>% names  
 ```  
 
-## Here we produced some summary statistics and graphs of the data.  
- 
+## Here we produced some summary statistics and graphs of the data. First, we looked at a full summary on each column of our data. Next, we decided to specifically look further into total shares by days of the week. In order to do summaries on days of the week, we needed to gather the days/values by shares and filter by true values. 
+```{r,echo=TRUE, message = FALSE}  
+library(tidyverse)
+summary(Data)  
+Days <- Data %>% pivot_longer(starts_with("weekday_is"), names_to = "day", values_to = "data") %>% filter(data == TRUE) 
+
+Summary1 <- Days %>% group_by(day) %>% summarize(std = sd(shares), average = mean(shares), median = median(shares), IQR = IQR(shares))  
+
+```  
+
