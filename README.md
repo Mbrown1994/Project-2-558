@@ -1,9 +1,9 @@
-Project Two Practice
+Project Two
 ================
-Mary Brown
+Mary Brown and Jennifer Relihan
 10/21/2021
 
-# Read in the data and learn about the dimensions as well as different column names.
+## Read in the data and learn about the dimensions as well as different column names.
 
 ``` r
 library(magrittr)
@@ -40,7 +40,7 @@ names(Data)
     ## [58] "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
     ## [61] "shares"
 
-# Subset the data by channels and create a vector of all of the channels we are interested in.
+## Subset the data by channels and create a vector of all of the channels we are interested in.
 
 ``` r
 EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %>% select(-starts_with("data_channel_is_"))  
@@ -48,4 +48,4 @@ EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %
 AllChannels <- Data %>% select(starts_with("data_channel_is_")) %>% names  
 ```
 
-# Here we produced some summary statistics and graphs of the data.
+## Here we produced some summary statistics and graphs of the data.
