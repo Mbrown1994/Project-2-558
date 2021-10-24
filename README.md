@@ -48,7 +48,7 @@ EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %
 AllChannels <- Data %>% select(starts_with("data_channel_is_")) %>% names  
 ```
 
-## Here we produced some summary statistics and graphs of the data. First, we looked at a full summary on each column of our data. Next, we decided to specifically look further into total shares by days of the week. In order to do summaries on days of the week, we needed to gather the days/values by shares and filter by true values.
+## Here we produced some summary statistics and graphs of the data. First, we looked at a full summary on each column of our data. Next, we decided to specifically look further into total shares by days of the week. In order to do summaries on days of the week, we needed to gather the days/values by shares and filter by true values. The first summary shows the standard deviation, average, median, and IQR for each day of the week by shares. The second summary shows the same summary statistics for each day of the week by minimum amount of shares.
 
 ``` r
 library(tidyverse)
@@ -137,4 +137,23 @@ summary(Data)
 Days <- Data %>% pivot_longer(starts_with("weekday_is"), names_to = "day", values_to = "data") %>% filter(data == TRUE) 
 
 Summary1 <- Days %>% group_by(day) %>% summarize(std = sd(shares), average = mean(shares), median = median(shares), IQR = IQR(shares))  
+
+Summary2 <- Days %>% group_by(day) %>% summarize(std = sd(kw_min_min), average = mean(kw_min_min), median = median(kw_min_min), IQR = IQR(kw_min_min)) 
 ```
+
+## Section for Plots
+
+``` r
+library(ggplot2)  
+Videos <- ggplot(Data, aes(x = num_videos, y= shares)) + geom_point(shape = 18, color = "red")  
+print(Videos)  
+```
+
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
+``` r
+Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_point(shape = 18, color = "blue")
+print(Images)
+```
+
+![](README_files/figure-gfm/unnamed-chunk-20-2.png)<!-- -->
