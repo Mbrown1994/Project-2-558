@@ -57,7 +57,7 @@ body {
 ## [58] &quot;title_sentiment_polarity&quot;      &quot;abs_title_subjectivity&quot;        &quot;abs_title_sentiment_polarity&quot; 
 ## [61] &quot;shares&quot;</code></pre>
 <h2 id="subset">Subset</h2>
-<h3 id="sunset-the-data-by-channels-and-create-a-vector-of-all-of-the-channels-we-are-interested-in">Sunset the data by channels and create a vector of all of the channels we are interested in.</h3>
+<h3 id="subset-the-data-by-channels-and-create-a-vector-of-all-of-the-channels-we-are-interested-in">Subset the data by channels and create a vector of all of the channels we are interested in.</h3>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>EntertainmentChannel <span class="ot">&lt;-</span> Data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(data_channel_is_entertainment <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">starts_with</span>(<span class="st">&quot;data_channel_is_&quot;</span>))  </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>AllChannels <span class="ot">&lt;-</span> Data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">&quot;data_channel_is_&quot;</span>)) <span class="sc">%&gt;%</span> names  </span></code></pre></div>

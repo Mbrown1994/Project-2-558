@@ -16,7 +16,7 @@ names(Data)
 ```  
 
 ## Subset  
-### Sunset the data by channels and create a vector of all of the channels we are interested in.  
+### Subset the data by channels and create a vector of all of the channels we are interested in.  
 ```{r,echo=TRUE}  
 EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %>% select(-starts_with("data_channel_is_"))  
 
