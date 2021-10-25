@@ -143,9 +143,35 @@ summary(Data)
 Days <- Data %>% pivot_longer(starts_with("weekday_is"), names_to = "day", values_to = "data") %>% filter(data == TRUE) 
 
 Summary1 <- Days %>% group_by(day) %>% summarize(std = sd(shares), average = mean(shares), median = median(shares), IQR = IQR(shares))  
-
-Summary2 <- Days %>% group_by(day) %>% summarize(std = sd(kw_min_min), average = mean(kw_min_min), median = median(kw_min_min), IQR = IQR(kw_min_min)) 
+print(Summary1)
 ```
+
+    ## # A tibble: 7 × 5
+    ##   day                     std average median   IQR
+    ##   <chr>                 <dbl>   <dbl>  <dbl> <dbl>
+    ## 1 weekday_is_friday     8149.   3285.   1500 1726 
+    ## 2 weekday_is_monday    14691.   3647.   1400 1781 
+    ## 3 weekday_is_saturday  14231.   4078.   2000 2300 
+    ## 4 weekday_is_sunday     6215.   3747.   1900 2500 
+    ## 5 weekday_is_thursday   9436.   3179.   1400 1698 
+    ## 6 weekday_is_tuesday    9798.   3203.   1300 1603 
+    ## 7 weekday_is_wednesday 14588.   3303.   1300 1712.
+
+``` r
+Summary2 <- Days %>% group_by(day) %>% summarize(std = sd(kw_min_min), average = mean(kw_min_min), median = median(kw_min_min), IQR = IQR(kw_min_min))  
+print(Summary2)
+```
+
+    ## # A tibble: 7 × 5
+    ##   day                    std average median   IQR
+    ##   <chr>                <dbl>   <dbl>  <dbl> <dbl>
+    ## 1 weekday_is_friday     70.1    26.5     -1     5
+    ## 2 weekday_is_monday     70.0    26.3     -1     5
+    ## 3 weekday_is_saturday   65.3    22.8     -1     5
+    ## 4 weekday_is_sunday     71.8    27.9     -1     5
+    ## 5 weekday_is_thursday   70.5    26.9     -1     5
+    ## 6 weekday_is_tuesday    67.9    24.7     -1     5
+    ## 7 weekday_is_wednesday  70.4    26.8     -1     5
 
 ## Section for Plots
 
@@ -156,14 +182,14 @@ Videos <- ggplot(Data, aes(x = num_videos, y= shares)) + geom_point(shape = 18, 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + xlim(0,20) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Images") + labs(y = "Shares", x = "Number of Images", caption = "This view shows the number of images filtered from 0 to 20.") + theme(plot.caption = element_text(hjust =0))
 print(Images)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
 ## Splitting the data
 
