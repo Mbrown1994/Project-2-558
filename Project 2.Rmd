@@ -36,7 +36,7 @@ Summary2 <- Days %>% group_by(day) %>% summarize(std = sd(kw_min_min), average =
 ```  
 
 ## Section for Plots 
-```{r,echo=TRUE, message=FALSE}  
+```{r,echo=TRUE, message=FALSE, warning =FALSE}  
 library(ggplot2)  
 library(scales)
 Videos <- ggplot(Data, aes(x = num_videos, y= shares)) + geom_point(shape = 18, color = "red")  
