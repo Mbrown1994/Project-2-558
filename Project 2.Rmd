@@ -23,6 +23,12 @@ EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %
 AllChannels <- Data %>% select(starts_with("data_channel_is_")) %>% names  
 ```  
 
+### Check for any missing values and remove URL column as it is a non predictive variable 
+```{r,echo=FALSE}  
+sum(is.na(Data))  
+Data <- subset(Data, select = -url)
+```  
+
 ## Summary Statistics  
 ### Here we produced some summary statistics and graphs of the data. First, we looked at a full summary on each column of our data. Next, we decided to specifically look further into total shares by days of the week. In order to do summaries on days of the week, we needed to gather the days/values by shares and filter by true values. The first summary shows the standard deviation, average, median, and IQR for each day of the week by shares. The second summary shows the same summary statistics for each day of the week by minimum amount of shares. 
 ```{r,echo=TRUE, message = FALSE}  
@@ -41,11 +47,12 @@ print(Summary2)
 ```{r,echo=TRUE, message=FALSE, warning =FALSE}  
 library(ggplot2)  
 library(scales)
-Videos <- ggplot(Data, aes(x = num_videos, y= shares)) + geom_point(shape = 18, color = "red")  
-print(Videos)  
+Videos <- ggplot(Data, aes(x = num_videos, y = shares)) + geom_bar(stat = "identity", fill = "tan3") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Videos") + labs(y = "Shares", x = "Number of Videos", caption = "This view shows the number of videos filtered from 0 to 20.") + theme(plot.caption = element_text(hjust = 0))  
+print(Videos)
 
 Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Images") + labs(y = "Shares", x = "Number of Images", caption = "This view shows the number of images filtered from 0 to 20.") + theme(plot.caption = element_text(hjust =0))
-print(Images)
+print(Images)  
+
 ```  
 
 ## Splitting the data  
