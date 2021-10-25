@@ -24,7 +24,7 @@ AllChannels <- Data %>% select(starts_with("data_channel_is_")) %>% names
 ```  
 
 ### Check for any missing values and remove URL column as it is a non predictive variable 
-```{r,echo=FALSE}  
+```{r,echo=TRUE}  
 sum(is.na(Data))  
 Data <- subset(Data, select = -url)
 ```  
