@@ -3,7 +3,9 @@ Project Two
 Mary Brown and Jennifer Relihan
 10/21/2021
 
-# \#\# Data Manipulation
+## Data Manipulation
+
+=======
 
 ## Introduction
 
@@ -140,9 +142,33 @@ sum(is.na(Data))
 
 ### Before doing any exploratory data analysys (EDA), we need to split the data - 70% train and 30% test.
 
+``` r
+NumericData <- dplyr::select_if(EntertainmentChannel, is.numeric)
+set.seed(123)
+DataIndex<-createDataPartition(y = EntertainmentChannel$shares, p = 0.7, list = FALSE)  
+TrainData <- EntertainmentChannel[DataIndex,]
+TestData <- EntertainmentChannel[-DataIndex,]
+```
+
 ### We want to work a bit with days of the week. In order to do this, we need to create a column that shows all of the days of the week by shares.
 
+``` r
+Days = c('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')  
+EntertainmentChannel<- EntertainmentChannel %>% mutate(weekday = ifelse(weekday_is_monday==1, 'Monday',  
+                                    ifelse(weekday_is_tuesday==1, 'Tuesday',   
+                                    ifelse(weekday_is_wednesday==1, "Wednesday", 
+                                    ifelse(weekday_is_thursday==1, "Thursday",
+                                    ifelse(weekday_is_friday==1, "Friday",
+                                    ifelse(weekday_is_saturday==1, "Saturday", "Sunday"  
+                                           ))))))) %>% mutate(weekday = factor(weekday, levels = Days))
+```
+
 ### We would like to create a popularity column by shares for future analysis. This popularity column will rate by either “Popular” or “Unpopular.” To do this, we found the median value for the amount of shares and that was our divider.
+
+``` r
+ShareSummary <- EntertainmentChannel %>% summarize(median = median(shares))  
+EntertainmentChannel <- EntertainmentChannel %>% mutate(Popularity = ifelse(shares>1400, "Popular","Unpopular"))
+```
 
 ## Summary Statistics
 
