@@ -2,36 +2,28 @@
 title: "Project Two"
 author: "Mary Brown and Jennifer Relihan"
 date: "10/21/2021"
-output:  
-  github_document:  
-    toc: true
-    html_preview: false  
+output: html_document
 ---
 
-# Requirements to run this document  
-```{r,echo = TRUE, message = FALSE}  
-library(tidyverse)  
-library(magrittr)
-library(dplyr) 
-library(ggplot2)
-library(scales)
-library(corrplot)
-```  
-
 ## Data Manipulation
+=======
+## Introduction
+
+
+## Data  
+
 ### Read in the data and learn about the dimensions as well as different column names. 
 ```{r,echo=TRUE, message=FALSE}  
 Data<-read.csv("OnlineNewsPopularity.csv")  
 dim(Data)  
 names(Data)  
-str(Data)
+str(Data) 
 ```  
 
 ### After reviewing the attributes information on the website, we need to remove the non-predictive variables which are URL and Time Delta. Then, we need to subset the data by channels.
 ```{r,echo=TRUE}
 Data <- Data %>% select(-url, -timedelta)  
-Subset <- Data[ ,grepl("data_channel_is", names(Data))] %>% select(-contains('data_channel_is')) 
-dim(Subset)
+EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %>% select(-starts_with("data_channel_is_"))
 ```  
 
 ### Check for any missing values  
@@ -39,41 +31,42 @@ dim(Subset)
 sum(is.na(Data))  
 ```  
 
+### Before doing any exploratory data analysys (EDA), we need to split the data - 70% train and 30% test.  
+```{r, echo = FALSE}  
+NumericData <- dplyr::select_if(EntertainmentChannel, is.numeric)
+set.seed(123)
+DataIndex<-createDataPartition(y = EntertainmentChannel$shares, p = 0.7, list = FALSE)  
+TrainData <- EntertainmentChannel[DataIndex,]
+TestData <- EntertainmentChannel[-DataIndex,]
+```  
+
 ### We want to work a bit with days of the week. In order to do this, we need to create a column that shows all of the days of the week by shares. 
 ```{r,echo=FALSE}  
 Days = c('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')  
-Data <- Data %>% mutate(DayofWeek = ifelse(weekday_is_monday==1, 'Monday',  
+EntertainmentChannel<- EntertainmentChannel %>% mutate(weekday = ifelse(weekday_is_monday==1, 'Monday',  
                                     ifelse(weekday_is_tuesday==1, 'Tuesday',   
                                     ifelse(weekday_is_wednesday==1, "Wednesday", 
                                     ifelse(weekday_is_thursday==1, "Thursday",
                                     ifelse(weekday_is_friday==1, "Friday",
                                     ifelse(weekday_is_saturday==1, "Saturday", "Sunday"  
-                                           ))))))) %>% mutate(DayofWeek = factor(weekday, levels = Days))
+                                           ))))))) %>% mutate(weekday = factor(weekday, levels = Days))
 ```  
 
 ### We would like to create a popularity column by shares for future analysis. This popularity column will rate by either "Popular" or "Unpopular." To do this, we found the median value for the amount of shares and that was our divider.  
 ```{r,echo=FALSE}  
-ShareSummary <- Data %>% summarize(median = median(shares))  
-Data <- Data %>% mutate(Popularity = ifelse(shares>1400, "Popular","Unpopular"))
+ShareSummary <- EntertainmentChannel %>% summarize(median = median(shares))  
+EntertainmentChannel <- EntertainmentChannel %>% mutate(Popularity = ifelse(shares>1400, "Popular","Unpopular"))
 ```  
 
 ## Summary Statistics  
 ### Here we produced some summary statistics and graphs of the data.
 ```{r,echo=TRUE, message = FALSE}  
-library(tidyverse)  
-summary(Data)
-
-SharesSummary <- Data %>% summarize(std = sd(shares), average = mean(shares), median = median(shares), IQR = IQR(shares))
-as.data.frame(SharesSummary)  
-
 
 
 ```  
 
 ## Section for Plots 
 ```{r,echo=TRUE, message=FALSE, warning =FALSE}  
-library(ggplot2)  
-library(scales)  
 
 Videos <- ggplot(Data, aes(x = num_videos, y = shares)) + geom_bar(stat = "identity", fill = "tan3") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Videos") + labs(y = "Shares", x = "Number of Videos", caption = "This view shows the number of videos filtered from 0 to 20.") + theme(plot.caption = element_text(hjust = 0))  
 print(Videos)
@@ -81,31 +74,27 @@ print(Videos)
 Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Images") + labs(y = "Shares", x = "Number of Images", caption = "This view shows the number of images filtered from 0 to 20.") + theme(plot.caption = element_text(hjust =0))
 print(Images) 
 
+
+# Plot 3:
+# This changes word content 0 values to NA. We do this because we want to see the articles with words and how many shares they get. The 0 values had a lot more shares but are comprised of videos or photos with no words.
+EntertainmentChannel$n_tokens_content[EntertainmentChannel$n_tokens_content == 0] <- NA
+# The number of shares based on the number of words in the content to review how this effects shares.
+Num_words <- ggplot(EntertainmentChannel, aes(x=n_tokens_content, y=shares))+ geom_bar(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Number of Words") + ggtitle("Shares by Content Size") + theme(plot.caption = element_text(hjust =0))
+# Here you can review the trend of shares as a function of the size or word count of an article.
+Num_words
+
+
+# Plot 4:
+# Here we are exploring how the rate of positive words in an article effect the amount of shares
+positivity <- ggplot(EntertainmentChannel, aes(x=global_rate_positive_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Positive Words") + ggtitle("Shares by Positivity") + theme(plot.caption = element_text(hjust =0))
+positivity
+
+# Plot 5:
+# Here we are exploring how the rate of negative words in an article effect the amount of shares
+negativity <- ggplot(EntertainmentChannel, aes(x=global_rate_negative_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Negative Words") + ggtitle("Shares by Negativity") + theme(plot.caption = element_text(hjust =0))
+negativity
+
+# Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.15 positive content and a max rate of only 0.075 for negative words. We can see that the site Mashable tends to write more positive content for entertainment.
+pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
+pos_neg_join
 ```  
-
-## Modeling  
-### In this section we split the data - 70% train and 30% test  
-```{r,echo=TRUE, message=FALSE} 
-library(caret)  
-NumericData <- dplyr::select_if(Data, is.numeric)
-set.seed(123)
-DataIndex<-createDataPartition(y = Data$shares, p = 0.7, list = FALSE)  
-TrainData <- Data[DataIndex,]
-TestData <- Data[-DataIndex,]
-```  
-
-### In this section, we wanted to try and figure out which predictors to use. I looked at the p-values associated with the full model, and ran lm() on the significant ones denoted by ***. The adjusted R-squared value was actually lower for the model containing all significant predictors, so I decided to explore more using a correlation plot. 
-```{r,echo=FALSE} 
-library(corrplot)
-
-Model <- lm(shares~., data = TrainData)  
-summary(Model)  
-
-Model2 <- lm(shares ~ num_self_hrefs + data_channel_is_entertainment + kw_max_avg + kw_avg_avg + self_reference_min_shares, data = TrainData)  
-summary(Model2)  
-```  
-
-
-
-
-
