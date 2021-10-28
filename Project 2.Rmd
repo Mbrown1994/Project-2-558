@@ -2,46 +2,71 @@
 title: "Project Two"
 author: "Mary Brown and Jennifer Relihan"
 date: "10/21/2021"
-output: html_document
+output:  
+  github_document:  
+    toc: true
+    html_preview: false  
 ---
 
-## Data  
+# Requirements to run this document  
+```{r,echo = TRUE, message = FALSE}  
+library(tidyverse)  
+library(magrittr)
+library(dplyr) 
+library(ggplot2)
+library(scales)
+library(corrplot)
+```  
+
+## Data Manipulation
 ### Read in the data and learn about the dimensions as well as different column names. 
 ```{r,echo=TRUE, message=FALSE}  
-library(magrittr)
-library(dplyr)
 Data<-read.csv("OnlineNewsPopularity.csv")  
 dim(Data)  
 names(Data)  
 str(Data)
 ```  
 
-## Subset  
-### Subset the data by channels and create a vector of all of the channels we are interested in.  
-```{r,echo=TRUE}  
-EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %>% select(-starts_with("data_channel_is_"))  
-
-AllChannels <- Data %>% select(starts_with("data_channel_is_")) %>% names  
+### After reviewing the attributes information on the website, we need to remove the non-predictive variables which are URL and Time Delta. Then, we need to subset the data by channels.
+```{r,echo=TRUE}
+Data <- Data %>% select(-url, -timedelta)  
+Subset <- Data[ ,grepl("data_channel_is", names(Data))] %>% select(-contains('data_channel_is')) 
+dim(Subset)
 ```  
 
-### Check for any missing values.  
+### Check for any missing values  
 ```{r,echo=TRUE}  
 sum(is.na(Data))  
 ```  
 
+### We want to work a bit with days of the week. In order to do this, we need to create a column that shows all of the days of the week by shares. 
+```{r,echo=FALSE}  
+Days = c('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')  
+Data <- Data %>% mutate(DayofWeek = ifelse(weekday_is_monday==1, 'Monday',  
+                                    ifelse(weekday_is_tuesday==1, 'Tuesday',   
+                                    ifelse(weekday_is_wednesday==1, "Wednesday", 
+                                    ifelse(weekday_is_thursday==1, "Thursday",
+                                    ifelse(weekday_is_friday==1, "Friday",
+                                    ifelse(weekday_is_saturday==1, "Saturday", "Sunday"  
+                                           ))))))) %>% mutate(DayofWeek = factor(weekday, levels = Days))
+```  
+
+### We would like to create a popularity column by shares for future analysis. This popularity column will rate by either "Popular" or "Unpopular." To do this, we found the median value for the amount of shares and that was our divider.  
+```{r,echo=FALSE}  
+ShareSummary <- Data %>% summarize(median = median(shares))  
+Data <- Data %>% mutate(Popularity = ifelse(shares>1400, "Popular","Unpopular"))
+```  
+
 ## Summary Statistics  
-### Here we produced some summary statistics and graphs of the data. First, we looked at a full summary on each column of our data. Next, we decided to specifically look further into total shares by days of the week. In order to do summaries on days of the week, we needed to gather the days/values by shares and filter by true values. The first summary shows the standard deviation, average, median, and IQR for each day of the week by shares. The second summary shows the same summary statistics for each day of the week by minimum amount of shares. 
+### Here we produced some summary statistics and graphs of the data.
 ```{r,echo=TRUE, message = FALSE}  
 library(tidyverse)  
-summary(Data) 
+summary(Data)
 
-Days <- Data %>% pivot_longer(starts_with("weekday_is"), names_to = "day", values_to = "data") %>% filter(data == TRUE) 
+SharesSummary <- Data %>% summarize(std = sd(shares), average = mean(shares), median = median(shares), IQR = IQR(shares))
+as.data.frame(SharesSummary)  
 
-Summary1 <- Days %>% group_by(day) %>% summarize(std = sd(shares), average = mean(shares), median = median(shares), IQR = IQR(shares))  
-print(Summary1)
 
-Summary2 <- Days %>% group_by(day) %>% summarize(std = sd(kw_min_min), average = mean(kw_min_min), median = median(kw_min_min), IQR = IQR(kw_min_min))  
-print(Summary2)  
 
 ```  
 
@@ -62,11 +87,24 @@ print(Images)
 ### In this section we split the data - 70% train and 30% test  
 ```{r,echo=TRUE, message=FALSE} 
 library(caret)  
+NumericData <- dplyr::select_if(Data, is.numeric)
 set.seed(123)
 DataIndex<-createDataPartition(y = Data$shares, p = 0.7, list = FALSE)  
-TrainData <- Data[DataIndex,]  
-TestData <- Data[-DataIndex,]  
+TrainData <- Data[DataIndex,]
+TestData <- Data[-DataIndex,]
 ```  
+
+### In this section, we wanted to try and figure out which predictors to use. I looked at the p-values associated with the full model, and ran lm() on the significant ones denoted by ***. The adjusted R-squared value was actually lower for the model containing all significant predictors, so I decided to explore more using a correlation plot. 
+```{r,echo=FALSE} 
+library(corrplot)
+
+Model <- lm(shares~., data = TrainData)  
+summary(Model)  
+
+Model2 <- lm(shares ~ num_self_hrefs + data_channel_is_entertainment + kw_max_avg + kw_avg_avg + self_reference_min_shares, data = TrainData)  
+summary(Model2)  
+```  
+
 
 
 
