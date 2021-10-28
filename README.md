@@ -9,6 +9,18 @@ Mary Brown and Jennifer Relihan
 
 ## Data
 
+### Required to run this document
+
+``` r
+library(tidyverse)  
+library(caret)  
+library(ggplot2)  
+library(ggpubr)  
+library(magrittr)  
+library(scales)
+library(corrplot)
+```
+
 ### Read in the data and learn about the dimensions as well as different column names.
 
 ``` r
@@ -143,14 +155,14 @@ Videos <- ggplot(Data, aes(x = num_videos, y = shares)) + geom_bar(stat = "ident
 print(Videos)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ``` r
 Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Images") + labs(y = "Shares", x = "Number of Images", caption = "This view shows the number of images filtered from 0 to 20.") + theme(plot.caption = element_text(hjust =0))
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -162,7 +174,7 @@ Num_words <- ggplot(EntertainmentChannel, aes(x=n_tokens_content, y=shares))+ ge
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -171,7 +183,7 @@ positivity <- ggplot(EntertainmentChannel, aes(x=global_rate_positive_words, y=s
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -180,7 +192,7 @@ negativity <- ggplot(EntertainmentChannel, aes(x=global_rate_negative_words, y=s
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-5.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.15 positive content and a max rate of only 0.075 for negative words. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -188,4 +200,4 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-6.png)<!-- -->

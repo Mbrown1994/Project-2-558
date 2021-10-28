@@ -11,6 +11,16 @@ output: html_document
 
 
 ## Data  
+### Required to run this document  
+```{r, echo = TRUE}  
+library(tidyverse)  
+library(caret)  
+library(ggplot2)  
+library(ggpubr)  
+library(magrittr)  
+library(scales)
+library(corrplot)
+```  
 
 ### Read in the data and learn about the dimensions as well as different column names. 
 ```{r,echo=TRUE, message=FALSE}  
