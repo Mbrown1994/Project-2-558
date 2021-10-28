@@ -18,7 +18,8 @@ library(ggplot2)
 library(ggpubr)  
 library(magrittr)  
 library(scales)
-library(corrplot)
+library(corrplot)  
+library(GDAtools)
 ```
 
 ## Data Manipulation
@@ -35,26 +36,36 @@ dim(Data)
 names(Data)  
 ```
 
-    ##  [1] "url"                           "timedelta"                     "n_tokens_title"               
-    ##  [4] "n_tokens_content"              "n_unique_tokens"               "n_non_stop_words"             
-    ##  [7] "n_non_stop_unique_tokens"      "num_hrefs"                     "num_self_hrefs"               
-    ## [10] "num_imgs"                      "num_videos"                    "average_token_length"         
-    ## [13] "num_keywords"                  "data_channel_is_lifestyle"     "data_channel_is_entertainment"
-    ## [16] "data_channel_is_bus"           "data_channel_is_socmed"        "data_channel_is_tech"         
-    ## [19] "data_channel_is_world"         "kw_min_min"                    "kw_max_min"                   
-    ## [22] "kw_avg_min"                    "kw_min_max"                    "kw_max_max"                   
-    ## [25] "kw_avg_max"                    "kw_min_avg"                    "kw_max_avg"                   
-    ## [28] "kw_avg_avg"                    "self_reference_min_shares"     "self_reference_max_shares"    
-    ## [31] "self_reference_avg_sharess"    "weekday_is_monday"             "weekday_is_tuesday"           
-    ## [34] "weekday_is_wednesday"          "weekday_is_thursday"           "weekday_is_friday"            
-    ## [37] "weekday_is_saturday"           "weekday_is_sunday"             "is_weekend"                   
-    ## [40] "LDA_00"                        "LDA_01"                        "LDA_02"                       
-    ## [43] "LDA_03"                        "LDA_04"                        "global_subjectivity"          
-    ## [46] "global_sentiment_polarity"     "global_rate_positive_words"    "global_rate_negative_words"   
-    ## [49] "rate_positive_words"           "rate_negative_words"           "avg_positive_polarity"        
-    ## [52] "min_positive_polarity"         "max_positive_polarity"         "avg_negative_polarity"        
-    ## [55] "min_negative_polarity"         "max_negative_polarity"         "title_subjectivity"           
-    ## [58] "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
+    ##  [1] "url"                           "timedelta"                    
+    ##  [3] "n_tokens_title"                "n_tokens_content"             
+    ##  [5] "n_unique_tokens"               "n_non_stop_words"             
+    ##  [7] "n_non_stop_unique_tokens"      "num_hrefs"                    
+    ##  [9] "num_self_hrefs"                "num_imgs"                     
+    ## [11] "num_videos"                    "average_token_length"         
+    ## [13] "num_keywords"                  "data_channel_is_lifestyle"    
+    ## [15] "data_channel_is_entertainment" "data_channel_is_bus"          
+    ## [17] "data_channel_is_socmed"        "data_channel_is_tech"         
+    ## [19] "data_channel_is_world"         "kw_min_min"                   
+    ## [21] "kw_max_min"                    "kw_avg_min"                   
+    ## [23] "kw_min_max"                    "kw_max_max"                   
+    ## [25] "kw_avg_max"                    "kw_min_avg"                   
+    ## [27] "kw_max_avg"                    "kw_avg_avg"                   
+    ## [29] "self_reference_min_shares"     "self_reference_max_shares"    
+    ## [31] "self_reference_avg_sharess"    "weekday_is_monday"            
+    ## [33] "weekday_is_tuesday"            "weekday_is_wednesday"         
+    ## [35] "weekday_is_thursday"           "weekday_is_friday"            
+    ## [37] "weekday_is_saturday"           "weekday_is_sunday"            
+    ## [39] "is_weekend"                    "LDA_00"                       
+    ## [41] "LDA_01"                        "LDA_02"                       
+    ## [43] "LDA_03"                        "LDA_04"                       
+    ## [45] "global_subjectivity"           "global_sentiment_polarity"    
+    ## [47] "global_rate_positive_words"    "global_rate_negative_words"   
+    ## [49] "rate_positive_words"           "rate_negative_words"          
+    ## [51] "avg_positive_polarity"         "min_positive_polarity"        
+    ## [53] "max_positive_polarity"         "avg_negative_polarity"        
+    ## [55] "min_negative_polarity"         "max_negative_polarity"        
+    ## [57] "title_subjectivity"            "title_sentiment_polarity"     
+    ## [59] "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
     ## [61] "shares"
 
 ``` r
@@ -188,6 +199,13 @@ knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", dig
 
 Summary Statistics on Shares by Weekdays
 
+``` r
+GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
+```
+
+    ##    Sunday    Monday   Tuesday Wednesday  Thursday    Friday  Saturday       Sum 
+    ##   2083460   4435183   4558103   4650613   4058313   3396717   1529891  24712280
+
 ## Section for Plots
 
 ``` r
@@ -195,14 +213,14 @@ Videos <- ggplot(Data, aes(x = num_videos, y = shares)) + geom_bar(stat = "ident
 print(Videos)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ``` r
 Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Images") + labs(y = "Shares", x = "Number of Images", caption = "This view shows the number of images filtered from 0 to 20.") + theme(plot.caption = element_text(hjust =0))
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-28-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -214,7 +232,7 @@ Num_words <- ggplot(EntertainmentChannel, aes(x=n_tokens_content, y=shares))+ ge
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-28-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -223,7 +241,7 @@ positivity <- ggplot(EntertainmentChannel, aes(x=global_rate_positive_words, y=s
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-28-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -232,7 +250,7 @@ negativity <- ggplot(EntertainmentChannel, aes(x=global_rate_negative_words, y=s
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-28-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-5.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.15 positive content and a max rate of only 0.075 for negative words. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -240,4 +258,4 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-28-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-6.png)<!-- -->

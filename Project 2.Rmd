@@ -20,7 +20,8 @@ library(ggplot2)
 library(ggpubr)  
 library(magrittr)  
 library(scales)
-library(corrplot)
+library(corrplot)  
+library(GDAtools)
 ```  
 
 ## Data Manipulation 
@@ -69,7 +70,7 @@ knitr::kable(SharesStats, caption = "Summary Statistics on Shares", digits = 0)
 Weekdays <- TrainData %>% group_by(weekday) %>% summarise(Avg = round(mean(shares)), Maximum = round(max(shares)), Minimum = round(min(shares)))  
 knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", digits = 2)  
 
-
+GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
 
 ```  
 
