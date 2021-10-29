@@ -184,12 +184,22 @@ NumericData <- dplyr::select_if(EntertainmentChannel, is.numeric)
 set.seed(123)
 DataIndex<-createDataPartition(y = EntertainmentChannel$shares, p = 0.7, list = FALSE)  
 TrainData <- EntertainmentChannel[DataIndex,]
-TestData <- EntertainmentChannel[-DataIndex,] 
+TestData <- EntertainmentChannel[-DataIndex,]  
+dim(TrainData)  
 ```
+
+    ## [1] 4941   55
+
+``` r
+dim(TestData)
+```
+
+    ## [1] 2116   55
 
 ## Exploratory Data Analysis
 
 ``` r
+# This table shows summary statistics for our 'shares' data point. 
 SharesStats <- TrainData %>% summarize(Avg = mean(shares), Median = median(shares), STDV = sd(shares), IQR = IQR(shares))
 knitr::kable(SharesStats, caption = "Summary Statistics on Shares", digits = 0)
 ```
@@ -201,7 +211,8 @@ knitr::kable(SharesStats, caption = "Summary Statistics on Shares", digits = 0)
 Summary Statistics on Shares
 
 ``` r
-Weekdays <- TrainData %>% group_by(weekday) %>% summarise(Avg = round(mean(shares)), Maximum = round(max(shares)), Minimum = round(min(shares)))  
+# This table shows the summary statistics for shares by weekday. 
+Weekdays <- TrainData %>% group_by(weekday) %>% summarise(Avg = round(mean(shares)), Maximum = round(max(shares)), Minimum = round(min(shares))) 
 knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", digits = 2)  
 ```
 
@@ -218,6 +229,7 @@ knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", dig
 Summary Statistics on Shares by Weekdays
 
 ``` r
+<<<<<<< HEAD
 <<<<<<< HEAD
 # Showing popularity for the days of the week. A designation of Popular is when the number of shares is greater than 1200, and less than 1200 is considered Unpopular.
 weekday_popularity <- table(TrainData$weekday, TrainData$Popularity)
@@ -245,6 +257,9 @@ is_weekend_pop
     ##   0    1804      2506
     ##   1     439       192
 =======
+=======
+# This is a table displaying the average number of shares of referenced articles in mashable, by weekday. 
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
 GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
 ```
 
@@ -252,32 +267,81 @@ GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
     ##   2083460   4435183   4558103   4650613   4058313   3396717   1529891  24712280
 >>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
 
-## Section for Plots
-
 ``` r
-Videos <- ggplot(Data, aes(x = num_videos, y = shares)) + geom_bar(stat = "identity", fill = "tan3") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Videos") + labs(y = "Shares", x = "Number of Videos", caption = "This view shows the number of videos filtered from 0 to 20.") + theme(plot.caption = element_text(hjust = 0))  
-print(Videos)
+# This is a table displaying average keywords on certain days of the week  
+Keywords <- TrainData %>% group_by(weekday) %>% summarise(Average = mean(self_reference_avg_sharess), Median = median(self_reference_avg_sharess), STDV = sd(self_reference_avg_sharess), IQR = IQR(self_reference_avg_sharess))  
+knitr::kable(Keywords, caption = "Summary statistics of average shares of referenced articles by specific days of the week", digits = 2)
 ```
 
+| weekday   | Average |  Median |     STDV |     IQR |
+|:----------|--------:|--------:|---------:|--------:|
+| Sunday    | 5787.39 | 2346.90 | 12943.85 | 3825.00 |
+| Monday    | 4794.79 | 1933.33 | 14369.15 | 3355.50 |
+| Tuesday   | 4981.53 | 2100.00 |  8711.15 | 4193.80 |
+| Wednesday | 5033.13 | 2029.07 | 10070.74 | 4019.50 |
+| Thursday  | 4670.10 | 2066.67 |  8952.19 | 3862.83 |
+| Friday    | 5017.31 | 2000.00 | 10974.97 | 3950.50 |
+| Saturday  | 5645.35 | 2118.33 | 19230.65 | 3757.42 |
+
+Summary statistics of average shares of referenced articles by specific
+days of the week
+
+### Plots
+
+``` r
+# Plot 1: 
+# This plot displays the number of shares by weekday. 
+DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Days of the Week") + labs(y = "Shares", x = "Days of the Week") + theme(axis.text.x = element_text(angle = 45))
+print(DaysPlot)  
+```
+
+<<<<<<< HEAD
 <<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
 =======
 ![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 >>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
 
 ``` r
-Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Images") + labs(y = "Shares", x = "Number of Images", caption = "This view shows the number of images filtered from 0 to 20.") + theme(plot.caption = element_text(hjust =0))
-print(Images) 
+# Plot 2:
+# This plot displays the popularity of shares by days of the week.
+PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = as.factor(Popularity))) + labs(x = "Popularity by Day") + theme(axis.text.x = element_text(angle = 45)) + scale_fill_discrete(name = "Popularity")  
+print(PopularityPlot)
 ```
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-31-2.png)<!-- -->
 =======
 ![](README_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
 >>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
 
 ``` r
 # Plot 3:
+# This plot displays shares by the number of Videos.
+Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat = "identity", fill = "tan3") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Videos") + labs(y = "Shares", x = "Number of Videos", caption = "This view shows the number of videos filtered from 0 to 20.") + theme(plot.caption = element_text(hjust = 0))  
+print(Videos)  
+```
+
+![](README_files/figure-gfm/unnamed-chunk-17-3.png)<!-- -->
+
+``` r
+# Plot 4:
+# This plot displays shares by the number of images. 
+Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Images") + labs(y = "Shares", x = "Number of Images", caption = "This view shows the number of images filtered from 0 to 20.") + theme(plot.caption = element_text(hjust =0))
+print(Images) 
+```
+
+![](README_files/figure-gfm/unnamed-chunk-17-4.png)<!-- -->
+
+``` r
+# Plot 5:
 # This changes word content 0 values to NA. We do this because we want to see the articles with words and how many shares they get. The 0 values had a lot more shares but are comprised of videos or photos with no words.
 TrainData$n_tokens_content[TrainData$n_tokens_content == 0] <- NA
 # The number of shares based on the number of words in the content to review how this effects shares.
@@ -287,36 +351,48 @@ Num_words
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-31-3.png)<!-- -->
 =======
 ![](README_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->
 >>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-5.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
 
 ``` r
-# Plot 4:
+# Plot 6:
 # Here we are exploring how the rate of positive words in an article effect the amount of shares
 positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Positive Words") + ggtitle("Shares by Positivity") + theme(plot.caption = element_text(hjust =0))
 positivity
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-31-4.png)<!-- -->
 =======
 ![](README_files/figure-gfm/unnamed-chunk-12-4.png)<!-- -->
 >>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-6.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
 
 ``` r
-# Plot 5:
+# Plot 7:
 # Here we are exploring how the rate of negative words in an article effect the amount of shares
 negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Negative Words") + ggtitle("Shares by Negativity") + theme(plot.caption = element_text(hjust =0))
 negativity
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-31-5.png)<!-- -->
 =======
 ![](README_files/figure-gfm/unnamed-chunk-12-5.png)<!-- -->
 >>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-7.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -325,7 +401,124 @@ pos_neg_join
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-31-6.png)<!-- -->
 =======
 ![](README_files/figure-gfm/unnamed-chunk-12-6.png)<!-- -->
 >>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-8.png)<!-- -->
+
+## Modeling
+
+``` r
+# Explanation of Linear Regression:  
+
+# A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model.  
+FullData <- lm(shares~., data = TrainData)  
+summary(FullData) 
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = shares ~ ., data = TrainData)
+    ## 
+    ## Residuals:
+    ##    Min     1Q Median     3Q    Max 
+    ## -29586  -2457   -396    751 201305 
+    ## 
+    ## Coefficients: (10 not defined because of singularities)
+    ##                                Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)                   3.589e+03  1.866e+03   1.923  0.05458 .  
+    ## n_tokens_title               -8.057e+00  5.302e+01  -0.152  0.87922    
+    ## n_tokens_content              1.634e+00  3.812e-01   4.285 1.86e-05 ***
+    ## n_unique_tokens               1.009e+04  3.585e+03   2.815  0.00489 ** 
+    ## n_non_stop_words             -3.429e+03  3.165e+03  -1.083  0.27865    
+    ## n_non_stop_unique_tokens     -6.050e+03  3.060e+03  -1.977  0.04812 *  
+    ## num_hrefs                     6.543e+00  9.756e+00   0.671  0.50250    
+    ## num_self_hrefs               -1.055e+02  4.145e+01  -2.544  0.01097 *  
+    ## num_imgs                     -1.211e+01  1.261e+01  -0.960  0.33712    
+    ## num_videos                   -1.909e+01  2.025e+01  -0.943  0.34592    
+    ## average_token_length          3.123e+02  4.737e+02   0.659  0.50971    
+    ## num_keywords                 -1.349e+02  6.824e+01  -1.977  0.04807 *  
+    ## kw_min_min                    5.032e+00  3.405e+00   1.478  0.13954    
+    ## kw_max_min                    1.392e+00  1.335e-01  10.424  < 2e-16 ***
+    ## kw_avg_min                   -5.626e+00  6.753e-01  -8.332  < 2e-16 ***
+    ## kw_min_max                   -7.987e-03  4.060e-03  -1.967  0.04919 *  
+    ## kw_max_max                   -1.458e-04  1.188e-03  -0.123  0.90236    
+    ## kw_avg_max                    6.543e-06  1.852e-03   0.004  0.99718    
+    ## kw_min_avg                   -8.224e-02  1.529e-01  -0.538  0.59057    
+    ## kw_max_avg                    1.292e-01  5.813e-02   2.222  0.02631 *  
+    ## kw_avg_avg                    4.665e-01  2.889e-01   1.615  0.10638    
+    ## self_reference_min_shares     2.168e-03  2.447e-02   0.089  0.92941    
+    ## self_reference_max_shares     6.080e-03  8.442e-03   0.720  0.47143    
+    ## self_reference_avg_sharess    5.286e-03  2.508e-02   0.211  0.83308    
+    ## weekday_is_monday             4.232e+02  4.706e+02   0.899  0.36857    
+    ## weekday_is_tuesday            4.754e+01  4.712e+02   0.101  0.91963    
+    ## weekday_is_wednesday          2.459e+02  4.726e+02   0.520  0.60290    
+    ## weekday_is_thursday           2.173e+02  4.739e+02   0.459  0.64654    
+    ## weekday_is_friday             3.490e+02  4.913e+02   0.710  0.47752    
+    ## weekday_is_saturday          -7.011e+02  6.027e+02  -1.163  0.24472    
+    ## weekday_is_sunday                    NA         NA      NA       NA    
+    ## is_weekend                           NA         NA      NA       NA    
+    ## LDA_00                       -1.096e+03  1.648e+03  -0.665  0.50597    
+    ## LDA_01                        6.830e+02  1.221e+03   0.559  0.57609    
+    ## LDA_02                       -1.139e+03  1.417e+03  -0.804  0.42145    
+    ## LDA_03                        2.387e+02  1.218e+03   0.196  0.84465    
+    ## LDA_04                               NA         NA      NA       NA    
+    ## global_subjectivity           3.172e+03  1.560e+03   2.034  0.04201 *  
+    ## global_sentiment_polarity     5.492e+03  3.088e+03   1.778  0.07539 .  
+    ## global_rate_positive_words   -1.739e+04  1.427e+04  -1.218  0.22322    
+    ## global_rate_negative_words    1.440e+02  2.433e+04   0.006  0.99528    
+    ## rate_positive_words          -1.186e+03  2.169e+03  -0.547  0.58444    
+    ## rate_negative_words                  NA         NA      NA       NA    
+    ## avg_positive_polarity        -6.557e+02  2.474e+03  -0.265  0.79103    
+    ## min_positive_polarity        -9.845e+02  2.186e+03  -0.450  0.65241    
+    ## max_positive_polarity        -1.786e+02  8.096e+02  -0.221  0.82545    
+    ## avg_negative_polarity        -6.831e+02  2.195e+03  -0.311  0.75570    
+    ## min_negative_polarity        -6.511e+00  7.878e+02  -0.008  0.99341    
+    ## max_negative_polarity         7.741e+02  1.827e+03   0.424  0.67175    
+    ## title_subjectivity           -3.779e+01  4.760e+02  -0.079  0.93673    
+    ## title_sentiment_polarity     -3.003e+02  4.212e+02  -0.713  0.47582    
+    ## abs_title_subjectivity        3.291e+02  6.389e+02   0.515  0.60655    
+    ## abs_title_sentiment_polarity  1.356e+03  6.680e+02   2.029  0.04247 *  
+    ## weekdayMonday                        NA         NA      NA       NA    
+    ## weekdayTuesday                       NA         NA      NA       NA    
+    ## weekdayWednesday                     NA         NA      NA       NA    
+    ## weekdayThursday                      NA         NA      NA       NA    
+    ## weekdayFriday                        NA         NA      NA       NA    
+    ## weekdaySaturday                      NA         NA      NA       NA    
+    ## PopularityUnpopular          -4.356e+03  2.214e+02 -19.672  < 2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 7414 on 4891 degrees of freedom
+    ## Multiple R-squared:  0.1581, Adjusted R-squared:  0.1497 
+    ## F-statistic: 18.75 on 49 and 4891 DF,  p-value: < 2.2e-16
+
+``` r
+# This is the model I chose with some significant predictors 
+Model1<-as.formula("shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity")  
+
+
+# Fitting the model with the training data 
+fit1 <- train(Model2, data = TrainData, 
+              method = "lm",  
+              preProcess = c("center", "scale"),  
+              trControl = trainControl(method = "cv", number = 10))  
+
+Results <- data.frame(t(fit1$results))  
+colnames(Results) <- "Model Results"
+knitr::kable(Results, digits = 3)  
+```
+
+|            | Model Results |
+|:-----------|--------------:|
+| intercept  |         1.000 |
+| RMSE       |      7763.012 |
+| Rsquared   |         0.066 |
+| MAE        |      2871.004 |
+| RMSESD     |      1995.422 |
+| RsquaredSD |         0.146 |
+| MAESD      |       232.692 |
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470

@@ -58,18 +58,23 @@ NumericData <- dplyr::select_if(EntertainmentChannel, is.numeric)
 set.seed(123)
 DataIndex<-createDataPartition(y = EntertainmentChannel$shares, p = 0.7, list = FALSE)  
 TrainData <- EntertainmentChannel[DataIndex,]
-TestData <- EntertainmentChannel[-DataIndex,] 
+TestData <- EntertainmentChannel[-DataIndex,]  
+dim(TrainData)  
+dim(TestData)
 ```  
 
 
 ## Exploratory Data Analysis  
 ```{r,echo=TRUE, message=FALSE}  
+# This table shows summary statistics for our 'shares' data point. 
 SharesStats <- TrainData %>% summarize(Avg = mean(shares), Median = median(shares), STDV = sd(shares), IQR = IQR(shares))
 knitr::kable(SharesStats, caption = "Summary Statistics on Shares", digits = 0)
- 
-Weekdays <- TrainData %>% group_by(weekday) %>% summarise(Avg = round(mean(shares)), Maximum = round(max(shares)), Minimum = round(min(shares)))  
+
+# This table shows the summary statistics for shares by weekday. 
+Weekdays <- TrainData %>% group_by(weekday) %>% summarise(Avg = round(mean(shares)), Maximum = round(max(shares)), Minimum = round(min(shares))) 
 knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", digits = 2)  
 
+<<<<<<< HEAD
 # Showing popularity for the days of the week. A designation of Popular is when the number of shares is greater than 1200, and less than 1200 is considered Unpopular.
 weekday_popularity <- table(TrainData$weekday, TrainData$Popularity)
 weekday_popularity
@@ -77,21 +82,39 @@ weekday_popularity
 # Showing popularity for weekdays vs weekends.For the y-axis column 0 = weekday and 1 = weekend. Here we can summarize popularity of content based on if it was shared over the weekend or during the week. 
 is_weekend_pop <- table(TrainData$is_weekend, TrainData$Popularity)
 is_weekend_pop
+=======
+# This is a table displaying the average number of shares of referenced articles in mashable, by weekday. 
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
 GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
 
+# This is a table displaying average keywords on certain days of the week  
+Keywords <- TrainData %>% group_by(weekday) %>% summarise(Average = mean(self_reference_avg_sharess), Median = median(self_reference_avg_sharess), STDV = sd(self_reference_avg_sharess), IQR = IQR(self_reference_avg_sharess))  
+knitr::kable(Keywords, caption = "Summary statistics of average shares of referenced articles by specific days of the week", digits = 2)
 ```  
 
-## Section for Plots 
+### Plots 
 ```{r,echo=TRUE, message=FALSE, warning =FALSE}  
+# Plot 1: 
+# This plot displays the number of shares by weekday. 
+DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Days of the Week") + labs(y = "Shares", x = "Days of the Week") + theme(axis.text.x = element_text(angle = 45))
+print(DaysPlot)  
 
-Videos <- ggplot(Data, aes(x = num_videos, y = shares)) + geom_bar(stat = "identity", fill = "tan3") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Videos") + labs(y = "Shares", x = "Number of Videos", caption = "This view shows the number of videos filtered from 0 to 20.") + theme(plot.caption = element_text(hjust = 0))  
-print(Videos)
-
-Images <- ggplot(Data, aes(x = num_imgs, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Images") + labs(y = "Shares", x = "Number of Images", caption = "This view shows the number of images filtered from 0 to 20.") + theme(plot.caption = element_text(hjust =0))
-print(Images) 
-
+# Plot 2:
+# This plot displays the popularity of shares by days of the week.
+PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = as.factor(Popularity))) + labs(x = "Popularity by Day") + theme(axis.text.x = element_text(angle = 45)) + scale_fill_discrete(name = "Popularity")  
+print(PopularityPlot)
 
 # Plot 3:
+# This plot displays shares by the number of Videos.
+Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat = "identity", fill = "tan3") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Videos") + labs(y = "Shares", x = "Number of Videos", caption = "This view shows the number of videos filtered from 0 to 20.") + theme(plot.caption = element_text(hjust = 0))  
+print(Videos)  
+
+# Plot 4:
+# This plot displays shares by the number of images. 
+Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Images") + labs(y = "Shares", x = "Number of Images", caption = "This view shows the number of images filtered from 0 to 20.") + theme(plot.caption = element_text(hjust =0))
+print(Images) 
+
+# Plot 5:
 # This changes word content 0 values to NA. We do this because we want to see the articles with words and how many shares they get. The 0 values had a lot more shares but are comprised of videos or photos with no words.
 TrainData$n_tokens_content[TrainData$n_tokens_content == 0] <- NA
 # The number of shares based on the number of words in the content to review how this effects shares.
@@ -99,13 +122,12 @@ Num_words <- ggplot(TrainData, aes(x=n_tokens_content, y=shares))+ geom_bar(stat
 # Here you can review the trend of shares as a function of the size or word count of an article.
 Num_words
 
-
-# Plot 4:
+# Plot 6:
 # Here we are exploring how the rate of positive words in an article effect the amount of shares
 positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Positive Words") + ggtitle("Shares by Positivity") + theme(plot.caption = element_text(hjust =0))
 positivity
 
-# Plot 5:
+# Plot 7:
 # Here we are exploring how the rate of negative words in an article effect the amount of shares
 negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Negative Words") + ggtitle("Shares by Negativity") + theme(plot.caption = element_text(hjust =0))
 negativity
@@ -113,4 +135,29 @@ negativity
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
 pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
+```  
+
+## Modeling  
+```{r,echo=TRUE}  
+# Explanation of Linear Regression:  
+
+# A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model.  
+FullData <- lm(shares~., data = TrainData)  
+summary(FullData) 
+
+# This is the model I chose with some significant predictors 
+Model1<-as.formula("shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity")  
+
+
+# Fitting the model with the training data 
+fit1 <- train(Model2, data = TrainData, 
+              method = "lm",  
+              preProcess = c("center", "scale"),  
+              trControl = trainControl(method = "cv", number = 10))  
+
+Results <- data.frame(t(fit1$results))  
+colnames(Results) <- "Model Results"
+knitr::kable(Results, digits = 3)  
+
+
 ```  
