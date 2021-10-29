@@ -64,18 +64,23 @@ TestData <- EntertainmentChannel[-DataIndex,]
 
 ## Exploratory Data Analysis  
 ```{r,echo=TRUE, message=FALSE}  
+# This table shows summary statistics for our 'shares' data point. 
 SharesStats <- TrainData %>% summarize(Avg = mean(shares), Median = median(shares), STDV = sd(shares), IQR = IQR(shares))
 knitr::kable(SharesStats, caption = "Summary Statistics on Shares", digits = 0)
- 
-Weekdays <- TrainData %>% group_by(weekday) %>% summarise(Avg = round(mean(shares)), Maximum = round(max(shares)), Minimum = round(min(shares)))  
+
+# This table shows the summary statistics for shares by weekday. 
+Weekdays <- TrainData %>% group_by(weekday) %>% summarise(Avg = round(mean(shares)), Maximum = round(max(shares)), Minimum = round(min(shares))) 
 knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", digits = 2)  
 
+# This is a contingency table showing the average number of shares of referenced articles in mashable, by weekday. 
 GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
 
 ```  
 
-## Section for Plots 
+### Plots 
 ```{r,echo=TRUE, message=FALSE, warning =FALSE}  
+DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat = "identity", fill = "steelblue") + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Days of the Week") + labs(y = "Shares", x = "Days of the Week") + theme(axis.text.x = element_text(angle = 45))
+print(DaysPlot)
 
 Videos <- ggplot(Data, aes(x = num_videos, y = shares)) + geom_bar(stat = "identity", fill = "tan3") + xlim(-1,21) + scale_y_continuous(labels = unit_format(unit = "M", scale = 5e-6)) + ggtitle("Shares by Videos") + labs(y = "Shares", x = "Number of Videos", caption = "This view shows the number of videos filtered from 0 to 20.") + theme(plot.caption = element_text(hjust = 0))  
 print(Videos)
