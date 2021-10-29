@@ -74,7 +74,6 @@ knitr::kable(SharesStats, caption = "Summary Statistics on Shares", digits = 0)
 Weekdays <- TrainData %>% group_by(weekday) %>% summarise(Avg = round(mean(shares)), Maximum = round(max(shares)), Minimum = round(min(shares))) 
 knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", digits = 2)  
 
-<<<<<<< HEAD
 # Showing popularity for the days of the week. A designation of Popular is when the number of shares is greater than 1200, and less than 1200 is considered Unpopular.
 weekday_popularity <- table(TrainData$weekday, TrainData$Popularity)
 weekday_popularity
@@ -82,9 +81,7 @@ weekday_popularity
 # Showing popularity for weekdays vs weekends.For the y-axis column 0 = weekday and 1 = weekend. Here we can summarize popularity of content based on if it was shared over the weekend or during the week. 
 is_weekend_pop <- table(TrainData$is_weekend, TrainData$Popularity)
 is_weekend_pop
-=======
 # This is a table displaying the average number of shares of referenced articles in mashable, by weekday. 
->>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
 GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
 
 # This is a table displaying average keywords on certain days of the week  
