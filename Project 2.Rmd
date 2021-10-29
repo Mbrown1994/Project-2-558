@@ -121,3 +121,23 @@ negativity
 pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```  
+
+## Modeling  
+```{r,echo=FALSE}  
+# Explanation of Linear Regression:  
+
+# A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model.  
+Model <- lm(shares~., data = TrainData)  
+summary(Model) 
+
+# This is the model I chose with some significant predictors 
+Model2<-lm(shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity, data = TrainData)
+
+set.seed(10)
+fit1 <- train(shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity,  
+              data = TrainData, 
+              method = "lm",  
+              preProcess = c("center", "scale"),  
+              trControl = trainControl(method = "repeatedcv", number = 10, repeats = 3))  
+fit1
+```  
