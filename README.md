@@ -192,12 +192,31 @@ knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", dig
 Summary Statistics on Shares by Weekdays
 
 ``` r
-# This is a contingency table showing the average number of shares of referenced articles in mashable, by weekday. 
+# This is a table displaying the average number of shares of referenced articles in mashable, by weekday. 
 GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
 ```
 
     ##    Sunday    Monday   Tuesday Wednesday  Thursday    Friday  Saturday       Sum 
     ##   2083460   4435183   4558103   4650613   4058313   3396717   1529891  24712280
+
+``` r
+# This is a table displaying average keywords on certain days of the week  
+Keywords <- TrainData %>% group_by(weekday) %>% summarise(Average = mean(self_reference_avg_sharess), Median = median(self_reference_avg_sharess), STDV = sd(self_reference_avg_sharess), IQR = IQR(self_reference_avg_sharess))  
+knitr::kable(Keywords, caption = "Summary statistics of average shares of referenced articles by specific days of the week", digits = 2)
+```
+
+| weekday   | Average |  Median |     STDV |     IQR |
+|:----------|--------:|--------:|---------:|--------:|
+| Sunday    | 5787.39 | 2346.90 | 12943.85 | 3825.00 |
+| Monday    | 4794.79 | 1933.33 | 14369.15 | 3355.50 |
+| Tuesday   | 4981.53 | 2100.00 |  8711.15 | 4193.80 |
+| Wednesday | 5033.13 | 2029.07 | 10070.74 | 4019.50 |
+| Thursday  | 4670.10 | 2066.67 |  8952.19 | 3862.83 |
+| Friday    | 5017.31 | 2000.00 | 10974.97 | 3950.50 |
+| Saturday  | 5645.35 | 2118.33 | 19230.65 | 3757.42 |
+
+Summary statistics of average shares of referenced articles by specific
+days of the week
 
 ### Plots
 
@@ -208,7 +227,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-62-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -217,7 +236,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-62-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -226,7 +245,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-62-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -235,7 +254,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-62-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -247,7 +266,7 @@ Num_words <- ggplot(EntertainmentChannel, aes(x=n_tokens_content, y=shares))+ ge
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-62-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -256,7 +275,7 @@ positivity <- ggplot(EntertainmentChannel, aes(x=global_rate_positive_words, y=s
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-62-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -265,7 +284,7 @@ negativity <- ggplot(EntertainmentChannel, aes(x=global_rate_negative_words, y=s
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-62-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.15 positive content and a max rate of only 0.075 for negative words. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -273,7 +292,7 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-62-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-8.png)<!-- -->
 
 ## Modeling
 

@@ -72,9 +72,12 @@ knitr::kable(SharesStats, caption = "Summary Statistics on Shares", digits = 0)
 Weekdays <- TrainData %>% group_by(weekday) %>% summarise(Avg = round(mean(shares)), Maximum = round(max(shares)), Minimum = round(min(shares))) 
 knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", digits = 2)  
 
-# This is a contingency table showing the average number of shares of referenced articles in mashable, by weekday. 
+# This is a table displaying the average number of shares of referenced articles in mashable, by weekday. 
 GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
 
+# This is a table displaying average keywords on certain days of the week  
+Keywords <- TrainData %>% group_by(weekday) %>% summarise(Average = mean(self_reference_avg_sharess), Median = median(self_reference_avg_sharess), STDV = sd(self_reference_avg_sharess), IQR = IQR(self_reference_avg_sharess))  
+knitr::kable(Keywords, caption = "Summary statistics of average shares of referenced articles by specific days of the week", digits = 2)
 ```  
 
 ### Plots 
