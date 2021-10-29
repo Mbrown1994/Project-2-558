@@ -20,7 +20,8 @@ library(ggplot2)
 library(ggpubr)  
 library(magrittr)  
 library(scales)
-library(corrplot)
+library(corrplot)  
+library(GDAtools)
 ```  
 
 ## Data Manipulation 
@@ -76,6 +77,8 @@ weekday_popularity
 # Showing popularity for weekdays vs weekends.For the y-axis column 0 = weekday and 1 = weekend. Here we can summarize popularity of content based on if it was shared over the weekend or during the week. 
 is_weekend_pop <- table(TrainData$is_weekend, TrainData$Popularity)
 is_weekend_pop
+GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
+
 ```  
 
 ## Section for Plots 
