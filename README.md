@@ -36,6 +36,7 @@ dim(Data)
 names(Data)  
 ```
 
+<<<<<<< HEAD
     ##  [1] "url"                           "timedelta"                     "n_tokens_title"               
     ##  [4] "n_tokens_content"              "n_unique_tokens"               "n_non_stop_words"             
     ##  [7] "n_non_stop_unique_tokens"      "num_hrefs"                     "num_self_hrefs"               
@@ -56,6 +57,56 @@ names(Data)
     ## [52] "min_positive_polarity"         "max_positive_polarity"         "avg_negative_polarity"        
     ## [55] "min_negative_polarity"         "max_negative_polarity"         "title_subjectivity"           
     ## [58] "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
+=======
+<<<<<<< HEAD
+    ##  [1] "url"                           "timedelta"                     "n_tokens_title"                "n_tokens_content"             
+    ##  [5] "n_unique_tokens"               "n_non_stop_words"              "n_non_stop_unique_tokens"      "num_hrefs"                    
+    ##  [9] "num_self_hrefs"                "num_imgs"                      "num_videos"                    "average_token_length"         
+    ## [13] "num_keywords"                  "data_channel_is_lifestyle"     "data_channel_is_entertainment" "data_channel_is_bus"          
+    ## [17] "data_channel_is_socmed"        "data_channel_is_tech"          "data_channel_is_world"         "kw_min_min"                   
+    ## [21] "kw_max_min"                    "kw_avg_min"                    "kw_min_max"                    "kw_max_max"                   
+    ## [25] "kw_avg_max"                    "kw_min_avg"                    "kw_max_avg"                    "kw_avg_avg"                   
+    ## [29] "self_reference_min_shares"     "self_reference_max_shares"     "self_reference_avg_sharess"    "weekday_is_monday"            
+    ## [33] "weekday_is_tuesday"            "weekday_is_wednesday"          "weekday_is_thursday"           "weekday_is_friday"            
+    ## [37] "weekday_is_saturday"           "weekday_is_sunday"             "is_weekend"                    "LDA_00"                       
+    ## [41] "LDA_01"                        "LDA_02"                        "LDA_03"                        "LDA_04"                       
+    ## [45] "global_subjectivity"           "global_sentiment_polarity"     "global_rate_positive_words"    "global_rate_negative_words"   
+    ## [49] "rate_positive_words"           "rate_negative_words"           "avg_positive_polarity"         "min_positive_polarity"        
+    ## [53] "max_positive_polarity"         "avg_negative_polarity"         "min_negative_polarity"         "max_negative_polarity"        
+    ## [57] "title_subjectivity"            "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
+=======
+    ##  [1] "url"                           "timedelta"                    
+    ##  [3] "n_tokens_title"                "n_tokens_content"             
+    ##  [5] "n_unique_tokens"               "n_non_stop_words"             
+    ##  [7] "n_non_stop_unique_tokens"      "num_hrefs"                    
+    ##  [9] "num_self_hrefs"                "num_imgs"                     
+    ## [11] "num_videos"                    "average_token_length"         
+    ## [13] "num_keywords"                  "data_channel_is_lifestyle"    
+    ## [15] "data_channel_is_entertainment" "data_channel_is_bus"          
+    ## [17] "data_channel_is_socmed"        "data_channel_is_tech"         
+    ## [19] "data_channel_is_world"         "kw_min_min"                   
+    ## [21] "kw_max_min"                    "kw_avg_min"                   
+    ## [23] "kw_min_max"                    "kw_max_max"                   
+    ## [25] "kw_avg_max"                    "kw_min_avg"                   
+    ## [27] "kw_max_avg"                    "kw_avg_avg"                   
+    ## [29] "self_reference_min_shares"     "self_reference_max_shares"    
+    ## [31] "self_reference_avg_sharess"    "weekday_is_monday"            
+    ## [33] "weekday_is_tuesday"            "weekday_is_wednesday"         
+    ## [35] "weekday_is_thursday"           "weekday_is_friday"            
+    ## [37] "weekday_is_saturday"           "weekday_is_sunday"            
+    ## [39] "is_weekend"                    "LDA_00"                       
+    ## [41] "LDA_01"                        "LDA_02"                       
+    ## [43] "LDA_03"                        "LDA_04"                       
+    ## [45] "global_subjectivity"           "global_sentiment_polarity"    
+    ## [47] "global_rate_positive_words"    "global_rate_negative_words"   
+    ## [49] "rate_positive_words"           "rate_negative_words"          
+    ## [51] "avg_positive_polarity"         "min_positive_polarity"        
+    ## [53] "max_positive_polarity"         "avg_negative_polarity"        
+    ## [55] "min_negative_polarity"         "max_negative_polarity"        
+    ## [57] "title_subjectivity"            "title_sentiment_polarity"     
+    ## [59] "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
+>>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+>>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
     ## [61] "shares"
 
 ``` r
@@ -201,12 +252,43 @@ knitr::kable(Weekdays, caption = "Summary Statistics on Shares by Weekdays", dig
 Summary Statistics on Shares by Weekdays
 
 ``` r
+<<<<<<< HEAD
+<<<<<<< HEAD
+# Showing popularity for the days of the week. A designation of Popular is when the number of shares is greater than 1200, and less than 1200 is considered Unpopular.
+weekday_popularity <- table(TrainData$weekday, TrainData$Popularity)
+weekday_popularity
+```
+
+    ##            
+    ##             Popular Unpopular
+    ##   Sunday        253       107
+    ##   Monday        388       537
+    ##   Tuesday       377       538
+    ##   Wednesday     362       562
+    ##   Thursday      369       500
+    ##   Friday        308       369
+    ##   Saturday      186        85
+
+``` r
+# Showing popularity for weekdays vs weekends.For the y-axis column 0 = weekday and 1 = weekend. Here we can summarize popularity of content based on if it was shared over the weekend or during the week. 
+is_weekend_pop <- table(TrainData$is_weekend, TrainData$Popularity)
+is_weekend_pop
+```
+
+    ##    
+    ##     Popular Unpopular
+    ##   0    1804      2506
+    ##   1     439       192
+=======
+=======
 # This is a table displaying the average number of shares of referenced articles in mashable, by weekday. 
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
 GDAtools::wtable(TrainData$weekday, w = TrainData$self_reference_avg_sharess)
 ```
 
     ##    Sunday    Monday   Tuesday Wednesday  Thursday    Friday  Saturday       Sum 
     ##   2083460   4435183   4558103   4650613   4058313   3396717   1529891  24712280
+>>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
 
 ``` r
 # This is a table displaying average keywords on certain days of the week  
@@ -236,7 +318,19 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+=======
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+>>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
+>>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
 
 ``` r
 # Plot 2:
@@ -245,7 +339,19 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-33-2.png)<!-- -->
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+![](README_files/figure-gfm/unnamed-chunk-31-2.png)<!-- -->
+=======
+![](README_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
+>>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
+>>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
 
 ``` r
 # Plot 3:
@@ -268,40 +374,87 @@ print(Images)
 ``` r
 # Plot 5:
 # This changes word content 0 values to NA. We do this because we want to see the articles with words and how many shares they get. The 0 values had a lot more shares but are comprised of videos or photos with no words.
-EntertainmentChannel$n_tokens_content[EntertainmentChannel$n_tokens_content == 0] <- NA
+TrainData$n_tokens_content[TrainData$n_tokens_content == 0] <- NA
 # The number of shares based on the number of words in the content to review how this effects shares.
-Num_words <- ggplot(EntertainmentChannel, aes(x=n_tokens_content, y=shares))+ geom_bar(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Number of Words") + ggtitle("Shares by Content Size") + theme(plot.caption = element_text(hjust =0))
+Num_words <- ggplot(TrainData, aes(x=n_tokens_content, y=shares))+ geom_bar(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Number of Words") + ggtitle("Shares by Content Size") + theme(plot.caption = element_text(hjust =0))
 # Here you can review the trend of shares as a function of the size or word count of an article.
 Num_words
 ```
 
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-33-5.png)<!-- -->
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+![](README_files/figure-gfm/unnamed-chunk-31-3.png)<!-- -->
+=======
+![](README_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->
+>>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-5.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
+>>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
 
 ``` r
 # Plot 6:
 # Here we are exploring how the rate of positive words in an article effect the amount of shares
-positivity <- ggplot(EntertainmentChannel, aes(x=global_rate_positive_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Positive Words") + ggtitle("Shares by Positivity") + theme(plot.caption = element_text(hjust =0))
+positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Positive Words") + ggtitle("Shares by Positivity") + theme(plot.caption = element_text(hjust =0))
 positivity
 ```
 
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-33-6.png)<!-- -->
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+![](README_files/figure-gfm/unnamed-chunk-31-4.png)<!-- -->
+=======
+![](README_files/figure-gfm/unnamed-chunk-12-4.png)<!-- -->
+>>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-6.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
+>>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
 
 ``` r
 # Plot 7:
 # Here we are exploring how the rate of negative words in an article effect the amount of shares
-negativity <- ggplot(EntertainmentChannel, aes(x=global_rate_negative_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Negative Words") + ggtitle("Shares by Negativity") + theme(plot.caption = element_text(hjust =0))
+negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ geom_point(stat = "identity", fill="steelblue") + labs(y="Number of Shares", x="Rate of Negative Words") + ggtitle("Shares by Negativity") + theme(plot.caption = element_text(hjust =0))
 negativity
 ```
 
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-33-7.png)<!-- -->
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+![](README_files/figure-gfm/unnamed-chunk-31-5.png)<!-- -->
+=======
+![](README_files/figure-gfm/unnamed-chunk-12-5.png)<!-- -->
+>>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-7.png)<!-- -->
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
+>>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
 
 ``` r
-# Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.15 positive content and a max rate of only 0.075 for negative words. We can see that the site Mashable tends to write more positive content for entertainment.
+# Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
 pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
+<<<<<<< HEAD
 ![](README_files/figure-gfm/unnamed-chunk-33-8.png)<!-- -->
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+![](README_files/figure-gfm/unnamed-chunk-31-6.png)<!-- -->
+=======
+![](README_files/figure-gfm/unnamed-chunk-12-6.png)<!-- -->
+>>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
+=======
+![](README_files/figure-gfm/unnamed-chunk-17-8.png)<!-- -->
+>>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
 
 ## Linear Regression Models
 
@@ -408,6 +561,7 @@ knitr::kable(Results, digits = 3)
 |            | Model Results |
 |:-----------|--------------:|
 | intercept  |         1.000 |
+<<<<<<< HEAD
 | RMSE       |      7982.892 |
 | Rsquared   |         0.033 |
 | MAE        |      2935.816 |
@@ -418,3 +572,12 @@ knitr::kable(Results, digits = 3)
 ## Random Forest Model
 
 ### My explanation will go here
+=======
+| RMSE       |      7763.012 |
+| Rsquared   |         0.066 |
+| MAE        |      2871.004 |
+| RMSESD     |      1995.422 |
+| RsquaredSD |         0.146 |
+| MAESD      |       232.692 |
+>>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
+>>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
