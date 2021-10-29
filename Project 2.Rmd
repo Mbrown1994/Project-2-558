@@ -126,7 +126,7 @@ pos_neg_join
 ```  
 
 ## Modeling  
-```{r,echo=FALSE}  
+```{r,echo=TRUE}  
 # Explanation of Linear Regression:  
 
 # A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model.  

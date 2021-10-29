@@ -227,7 +227,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -236,7 +236,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -245,7 +245,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -254,7 +254,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -266,7 +266,7 @@ Num_words <- ggplot(EntertainmentChannel, aes(x=n_tokens_content, y=shares))+ ge
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -275,7 +275,7 @@ positivity <- ggplot(EntertainmentChannel, aes(x=global_rate_positive_words, y=s
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -284,7 +284,7 @@ negativity <- ggplot(EntertainmentChannel, aes(x=global_rate_negative_words, y=s
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.15 positive content and a max rate of only 0.075 for negative words. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -292,9 +292,17 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-8.png)<!-- -->
 
 ## Modeling
+
+``` r
+# Explanation of Linear Regression:  
+
+# A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model.  
+Model <- lm(shares~., data = TrainData)  
+summary(Model) 
+```
 
     ## 
     ## Call:
@@ -373,6 +381,20 @@ pos_neg_join
     ## Multiple R-squared:  0.1581, Adjusted R-squared:  0.1497 
     ## F-statistic: 18.75 on 49 and 4891 DF,  p-value: < 2.2e-16
 
+``` r
+# This is the model I chose with some significant predictors 
+Model2<-lm(shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity, data = TrainData)
+
+# Fitting the model with the training data 
+set.seed(10)
+fit1 <- train(shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity,  
+              data = TrainData, 
+              method = "lm",  
+              preProcess = c("center", "scale"),  
+              trControl = trainControl(method = "cv", number = 10))  
+fit1  
+```
+
     ## Linear Regression 
     ## 
     ## 4941 samples
@@ -388,6 +410,12 @@ pos_neg_join
     ## 
     ## Tuning parameter 'intercept' was held constant at a value of TRUE
 
+``` r
+Results <- data.frame(t(fit1$results))  
+colnames(Results) <- "Model Results"
+knitr::kable(Results, digits = 3)  
+```
+
 |            | Model Results |
 |:-----------|--------------:|
 | intercept  |         1.000 |
@@ -397,6 +425,13 @@ pos_neg_join
 | RMSESD     |      2975.120 |
 | RsquaredSD |         0.026 |
 | MAESD      |       410.795 |
+
+``` r
+# Model Prediction on the Test Data  
+pred1 <- predict(fit1, newdata = TestData)  
+PredResults <- postResample(pred1, obs = TestData$shares)  
+knitr::kable(PredResults, digits = 3)
+```
 
 |          |         x |
 |:---------|----------:|
