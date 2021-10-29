@@ -227,7 +227,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -236,7 +236,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -245,7 +245,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -254,7 +254,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -266,7 +266,7 @@ Num_words <- ggplot(EntertainmentChannel, aes(x=n_tokens_content, y=shares))+ ge
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -275,7 +275,7 @@ positivity <- ggplot(EntertainmentChannel, aes(x=global_rate_positive_words, y=s
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -284,7 +284,7 @@ negativity <- ggplot(EntertainmentChannel, aes(x=global_rate_negative_words, y=s
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.15 positive content and a max rate of only 0.075 for negative words. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -292,7 +292,7 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-8.png)<!-- -->
 
 ## Modeling
 
@@ -379,11 +379,27 @@ pos_neg_join
     ##   12 predictor
     ## 
     ## Pre-processing: centered (12), scaled (12) 
-    ## Resampling: Cross-Validated (10 fold, repeated 3 times) 
+    ## Resampling: Cross-Validated (10 fold) 
     ## Summary of sample sizes: 4447, 4446, 4447, 4447, 4447, 4448, ... 
     ## Resampling results:
     ## 
-    ##   RMSE      Rsquared    MAE     
-    ##   7848.667  0.02257644  2940.941
+    ##   RMSE      Rsquared    MAE    
+    ##   7731.286  0.02437995  2941.13
     ## 
     ## Tuning parameter 'intercept' was held constant at a value of TRUE
+
+|            | Model Results |
+|:-----------|--------------:|
+| intercept  |         1.000 |
+| RMSE       |      7731.286 |
+| Rsquared   |         0.024 |
+| MAE        |      2941.130 |
+| RMSESD     |      2975.120 |
+| RsquaredSD |         0.026 |
+| MAESD      |       410.795 |
+
+|          |         x |
+|:---------|----------:|
+| RMSE     | 14954.049 |
+| Rsquared |     0.000 |
+| MAE      |  3355.583 |

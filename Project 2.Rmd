@@ -136,11 +136,21 @@ summary(Model)
 # This is the model I chose with some significant predictors 
 Model2<-lm(shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity, data = TrainData)
 
+# Fitting the model with the training data 
 set.seed(10)
 fit1 <- train(shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity,  
               data = TrainData, 
               method = "lm",  
               preProcess = c("center", "scale"),  
-              trControl = trainControl(method = "repeatedcv", number = 10, repeats = 3))  
-fit1
+              trControl = trainControl(method = "cv", number = 10))  
+fit1  
+
+Results <- data.frame(t(fit1$results))  
+colnames(Results) <- "Model Results"
+knitr::kable(Results, digits = 3)  
+
+# Model Prediction on the Test Data  
+pred1 <- predict(fit1, newdata = TestData)  
+PredResults <- postResample(pred1, obs = TestData$shares)  
+knitr::kable(PredResults, digits = 3)
 ```  
