@@ -263,7 +263,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -272,7 +272,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -281,7 +281,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -290,7 +290,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -302,7 +302,7 @@ Num_words <- ggplot(TrainData, aes(x=n_tokens_content, y=shares))+ geom_bar(stat
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -311,7 +311,7 @@ positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ ge
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -320,7 +320,7 @@ negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ ge
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -328,7 +328,7 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-8.png)<!-- -->
 
 ## Linear Regression Models
 
@@ -428,6 +428,7 @@ fit1 <- train(Model1, data = TrainData,
               preProcess = c("center", "scale"),  
               trControl = trainControl(method = "cv", number = 10))  
 
+# Making a table of the results from the first linear model 
 Results <- data.frame(t(fit1$results))  
 colnames(Results) <- "Model Results"
 knitr::kable(Results, digits = 3)  
@@ -442,6 +443,94 @@ knitr::kable(Results, digits = 3)
 | RMSESD     |      2045.516 |
 | RsquaredSD |         0.058 |
 | MAESD      |       201.116 |
+
+``` r
+# View Results
+Results
+```
+
+    ##            Model Results
+    ## intercept   1.000000e+00
+    ## RMSE        7.982892e+03
+    ## Rsquared    3.335327e-02
+    ## MAE         2.935816e+03
+    ## RMSESD      2.045516e+03
+    ## RsquaredSD  5.790696e-02
+    ## MAESD       2.011159e+02
+
+``` r
+# Linear Regression Model 2:
+
+# After talking with a subject matter expert on marketing we discussed the columns available in the data set and which ones they may be most interested in seeing in a model to predict shares. 
+
+# Fitting the model with the training data.  
+fit2 <- train(shares ~weekday + global_rate_positive_words + global_rate_negative_words + title_sentiment_polarity,  
+              data = TrainData,  
+              method = "lm",   
+              preProcess = c("center", "scale"),  
+              trControl = trainControl(method = "cv", number = 10))  
+
+# Putting together the results of Model 2
+results <- data.frame(t(fit2$results))  
+colnames(results) <- "Model Results"  
+knitr::kable(results, digits = 3)  
+```
+
+|            | Model Results |
+|:-----------|--------------:|
+| intercept  |         1.000 |
+| RMSE       |      7368.580 |
+| Rsquared   |         0.002 |
+| MAE        |      2920.813 |
+| RMSESD     |      3402.365 |
+| RsquaredSD |         0.003 |
+| MAESD      |       436.673 |
+
+``` r
+# View results  
+results  
+```
+
+    ##            Model Results
+    ## intercept   1.000000e+00
+    ## RMSE        7.368580e+03
+    ## Rsquared    2.150332e-03
+    ## MAE         2.920813e+03
+    ## RMSESD      3.402365e+03
+    ## RsquaredSD  3.138260e-03
+    ## MAESD       4.366735e+02
+
+``` r
+# Putting both Linear Regression models together  
+lmr_results <- data.frame(t(fit1$results), t(fit2$results))  
+names(lmr_results)[1] <- "Model 1 Results"  
+names(lmr_results)[2] <- "Model 2 Results"  
+knitr::kable(lmr_results, digits = 3)  
+```
+
+|            | Model 1 Results | Model 2 Results |
+|:-----------|----------------:|----------------:|
+| intercept  |           1.000 |           1.000 |
+| RMSE       |        7982.892 |        7368.580 |
+| Rsquared   |           0.033 |           0.002 |
+| MAE        |        2935.816 |        2920.813 |
+| RMSESD     |        2045.516 |        3402.365 |
+| RsquaredSD |           0.058 |           0.003 |
+| MAESD      |         201.116 |         436.673 |
+
+``` r
+# View results  
+lmr_results
+```
+
+    ##            Model 1 Results Model 2 Results
+    ## intercept     1.000000e+00    1.000000e+00
+    ## RMSE          7.982892e+03    7.368580e+03
+    ## Rsquared      3.335327e-02    2.150332e-03
+    ## MAE           2.935816e+03    2.920813e+03
+    ## RMSESD        2.045516e+03    3.402365e+03
+    ## RsquaredSD    5.790696e-02    3.138260e-03
+    ## MAESD         2.011159e+02    4.366735e+02
 
 ## Random Forest Model
 

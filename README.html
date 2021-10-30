@@ -464,9 +464,10 @@ body {
 <span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;scale&quot;</span>),  </span>
 <span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>, <span class="at">number =</span> <span class="dv">10</span>))  </span>
 <span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>Results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">t</span>(fit1<span class="sc">$</span>results))  </span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Results) <span class="ot">&lt;-</span> <span class="st">&quot;Model Results&quot;</span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(Results, <span class="at">digits =</span> <span class="dv">3</span>)  </span></code></pre></div>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Making a table of the results from the first linear model </span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>Results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">t</span>(fit1<span class="sc">$</span>results))  </span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Results) <span class="ot">&lt;-</span> <span class="st">&quot;Model Results&quot;</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(Results, <span class="at">digits =</span> <span class="dv">3</span>)  </span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -505,6 +506,140 @@ body {
 </tr>
 </tbody>
 </table>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View Results</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>Results</span></code></pre></div>
+<pre><code>##            Model Results
+## intercept   1.000000e+00
+## RMSE        7.982892e+03
+## Rsquared    3.335327e-02
+## MAE         2.935816e+03
+## RMSESD      2.045516e+03
+## RsquaredSD  5.790696e-02
+## MAESD       2.011159e+02</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear Regression Model 2:</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># After talking with a subject matter expert on marketing we discussed the columns available in the data set and which ones they may be most interested in seeing in a model to predict shares. </span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting the model with the training data.  </span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">train</span>(shares <span class="sc">~</span>weekday <span class="sc">+</span> global_rate_positive_words <span class="sc">+</span> global_rate_negative_words <span class="sc">+</span> title_sentiment_polarity,  </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> TrainData,  </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">method =</span> <span class="st">&quot;lm&quot;</span>,   </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;scale&quot;</span>),  </span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>, <span class="at">number =</span> <span class="dv">10</span>))  </span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Putting together the results of Model 2</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">t</span>(fit2<span class="sc">$</span>results))  </span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(results) <span class="ot">&lt;-</span> <span class="st">&quot;Model Results&quot;</span>  </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(results, <span class="at">digits =</span> <span class="dv">3</span>)  </span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Model Results</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">intercept</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="even">
+<td align="left">RMSE</td>
+<td align="right">7368.580</td>
+</tr>
+<tr class="odd">
+<td align="left">Rsquared</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="even">
+<td align="left">MAE</td>
+<td align="right">2920.813</td>
+</tr>
+<tr class="odd">
+<td align="left">RMSESD</td>
+<td align="right">3402.365</td>
+</tr>
+<tr class="even">
+<td align="left">RsquaredSD</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">MAESD</td>
+<td align="right">436.673</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View results  </span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>results  </span></code></pre></div>
+<pre><code>##            Model Results
+## intercept   1.000000e+00
+## RMSE        7.368580e+03
+## Rsquared    2.150332e-03
+## MAE         2.920813e+03
+## RMSESD      3.402365e+03
+## RsquaredSD  3.138260e-03
+## MAESD       4.366735e+02</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Putting both Linear Regression models together  </span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>lmr_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">t</span>(fit1<span class="sc">$</span>results), <span class="fu">t</span>(fit2<span class="sc">$</span>results))  </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(lmr_results)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Model 1 Results&quot;</span>  </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(lmr_results)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Model 2 Results&quot;</span>  </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(lmr_results, <span class="at">digits =</span> <span class="dv">3</span>)  </span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Model 1 Results</th>
+<th align="right">Model 2 Results</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">intercept</td>
+<td align="right">1.000</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="even">
+<td align="left">RMSE</td>
+<td align="right">7982.892</td>
+<td align="right">7368.580</td>
+</tr>
+<tr class="odd">
+<td align="left">Rsquared</td>
+<td align="right">0.033</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="even">
+<td align="left">MAE</td>
+<td align="right">2935.816</td>
+<td align="right">2920.813</td>
+</tr>
+<tr class="odd">
+<td align="left">RMSESD</td>
+<td align="right">2045.516</td>
+<td align="right">3402.365</td>
+</tr>
+<tr class="even">
+<td align="left">RsquaredSD</td>
+<td align="right">0.058</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">MAESD</td>
+<td align="right">201.116</td>
+<td align="right">436.673</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View results  </span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>lmr_results</span></code></pre></div>
+<pre><code>##            Model 1 Results Model 2 Results
+## intercept     1.000000e+00    1.000000e+00
+## RMSE          7.982892e+03    7.368580e+03
+## Rsquared      3.335327e-02    2.150332e-03
+## MAE           2.935816e+03    2.920813e+03
+## RMSESD        2.045516e+03    3.402365e+03
+## RsquaredSD    5.790696e-02    3.138260e-03
+## MAESD         2.011159e+02    4.366735e+02</code></pre>
 <h2 id="random-forest-model">Random Forest Model</h2>
 <h3 id="my-explanation-will-go-here">My explanation will go here</h3>
 
