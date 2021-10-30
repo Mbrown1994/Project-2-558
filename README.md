@@ -36,36 +36,26 @@ dim(Data)
 names(Data)  
 ```
 
-    ##  [1] "url"                           "timedelta"                    
-    ##  [3] "n_tokens_title"                "n_tokens_content"             
-    ##  [5] "n_unique_tokens"               "n_non_stop_words"             
-    ##  [7] "n_non_stop_unique_tokens"      "num_hrefs"                    
-    ##  [9] "num_self_hrefs"                "num_imgs"                     
-    ## [11] "num_videos"                    "average_token_length"         
-    ## [13] "num_keywords"                  "data_channel_is_lifestyle"    
-    ## [15] "data_channel_is_entertainment" "data_channel_is_bus"          
-    ## [17] "data_channel_is_socmed"        "data_channel_is_tech"         
-    ## [19] "data_channel_is_world"         "kw_min_min"                   
-    ## [21] "kw_max_min"                    "kw_avg_min"                   
-    ## [23] "kw_min_max"                    "kw_max_max"                   
-    ## [25] "kw_avg_max"                    "kw_min_avg"                   
-    ## [27] "kw_max_avg"                    "kw_avg_avg"                   
-    ## [29] "self_reference_min_shares"     "self_reference_max_shares"    
-    ## [31] "self_reference_avg_sharess"    "weekday_is_monday"            
-    ## [33] "weekday_is_tuesday"            "weekday_is_wednesday"         
-    ## [35] "weekday_is_thursday"           "weekday_is_friday"            
-    ## [37] "weekday_is_saturday"           "weekday_is_sunday"            
-    ## [39] "is_weekend"                    "LDA_00"                       
-    ## [41] "LDA_01"                        "LDA_02"                       
-    ## [43] "LDA_03"                        "LDA_04"                       
-    ## [45] "global_subjectivity"           "global_sentiment_polarity"    
-    ## [47] "global_rate_positive_words"    "global_rate_negative_words"   
-    ## [49] "rate_positive_words"           "rate_negative_words"          
-    ## [51] "avg_positive_polarity"         "min_positive_polarity"        
-    ## [53] "max_positive_polarity"         "avg_negative_polarity"        
-    ## [55] "min_negative_polarity"         "max_negative_polarity"        
-    ## [57] "title_subjectivity"            "title_sentiment_polarity"     
-    ## [59] "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
+    ##  [1] "url"                           "timedelta"                     "n_tokens_title"               
+    ##  [4] "n_tokens_content"              "n_unique_tokens"               "n_non_stop_words"             
+    ##  [7] "n_non_stop_unique_tokens"      "num_hrefs"                     "num_self_hrefs"               
+    ## [10] "num_imgs"                      "num_videos"                    "average_token_length"         
+    ## [13] "num_keywords"                  "data_channel_is_lifestyle"     "data_channel_is_entertainment"
+    ## [16] "data_channel_is_bus"           "data_channel_is_socmed"        "data_channel_is_tech"         
+    ## [19] "data_channel_is_world"         "kw_min_min"                    "kw_max_min"                   
+    ## [22] "kw_avg_min"                    "kw_min_max"                    "kw_max_max"                   
+    ## [25] "kw_avg_max"                    "kw_min_avg"                    "kw_max_avg"                   
+    ## [28] "kw_avg_avg"                    "self_reference_min_shares"     "self_reference_max_shares"    
+    ## [31] "self_reference_avg_sharess"    "weekday_is_monday"             "weekday_is_tuesday"           
+    ## [34] "weekday_is_wednesday"          "weekday_is_thursday"           "weekday_is_friday"            
+    ## [37] "weekday_is_saturday"           "weekday_is_sunday"             "is_weekend"                   
+    ## [40] "LDA_00"                        "LDA_01"                        "LDA_02"                       
+    ## [43] "LDA_03"                        "LDA_04"                        "global_subjectivity"          
+    ## [46] "global_sentiment_polarity"     "global_rate_positive_words"    "global_rate_negative_words"   
+    ## [49] "rate_positive_words"           "rate_negative_words"           "avg_positive_polarity"        
+    ## [52] "min_positive_polarity"         "max_positive_polarity"         "avg_negative_polarity"        
+    ## [55] "min_negative_polarity"         "max_negative_polarity"         "title_subjectivity"           
+    ## [58] "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
     ## [61] "shares"
 
 ``` r
@@ -273,7 +263,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -282,7 +272,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -291,7 +281,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -300,7 +290,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -312,7 +302,7 @@ Num_words <- ggplot(TrainData, aes(x=n_tokens_content, y=shares))+ geom_bar(stat
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -321,7 +311,7 @@ positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ ge
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -330,7 +320,7 @@ negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ ge
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -338,11 +328,11 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-8.png)<!-- -->
 
 ## Linear Regression Models
 
-### My explanation of linear modeling will go here
+### Supervised learning includes regression models, tree based methods, and k nearest neighbors. The basic linear regression model includes a response, a value of our explanatory variable for the ith observation, the y-intercept, and the slope. The model aims to show a linear approach for modeling the relationship between predictors and some response. The model is fit by minimizing the sum of squared residuals, which is equivalent to assuming normality on errors and using maximum liklihood to estimate the beta’s. In R, the basic linear model fits done with lm(). When utilizing lm() in R, statistical analysis can be found using anova() or summary().
 
 ``` r
 # A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model.  
@@ -452,95 +442,6 @@ knitr::kable(Results, digits = 3)
 | RMSESD     |      2045.516 |
 | RsquaredSD |         0.058 |
 | MAESD      |       201.116 |
-
-``` r
-# View Results
-Results
-```
-
-    ##            Model Results
-    ## intercept   1.000000e+00
-    ## RMSE        7.982892e+03
-    ## Rsquared    3.335327e-02
-    ## MAE         2.935816e+03
-    ## RMSESD      2.045516e+03
-    ## RsquaredSD  5.790696e-02
-    ## MAESD       2.011159e+02
-
-``` r
-# Linear Regression Model 2:
-
-# After talking with a subject matter expert on marketing we discussed the columns available in the data set and which ones they may be most interested in seeing in a model to predict shares.
-Model2 <- lm(shares ~ weekday + global_rate_positive_words + global_rate_negative_words + title_sentiment_polarity, data=TrainData)
-
-# Fitting the model with the training data.
-fit2 <- train(shares ~ weekday + global_rate_positive_words + global_rate_negative_words + title_sentiment_polarity, 
-              data=TrainData, 
-              method= "lm", 
-              preProcess = c("center","scale"), 
-              trControl = trainControl(method="cv", number=10))
-
-# Putting together the results of Model 2
-results <- data.frame(t(fit2$results))
-colnames(results) <- "Model Results"
-knitr::kable(results, digits=3)
-```
-
-|            | Model Results |
-|:-----------|--------------:|
-| intercept  |         1.000 |
-| RMSE       |      7368.580 |
-| Rsquared   |         0.002 |
-| MAE        |      2920.813 |
-| RMSESD     |      3402.365 |
-| RsquaredSD |         0.003 |
-| MAESD      |       436.673 |
-
-``` r
-# View results
-results
-```
-
-    ##            Model Results
-    ## intercept   1.000000e+00
-    ## RMSE        7.368580e+03
-    ## Rsquared    2.150332e-03
-    ## MAE         2.920813e+03
-    ## RMSESD      3.402365e+03
-    ## RsquaredSD  3.138260e-03
-    ## MAESD       4.366735e+02
-
-``` r
-# Putting both Linear Regression models together
-lmr_results <- data.frame(t(fit1$results), t(fit2$results))
-names(lmr_results)[1] <- "Model 1 Results"
-names(lmr_results)[2] <- "Model 2 Results"
-knitr::kable(lmr_results, digits=3)
-```
-
-|            | Model 1 Results | Model 2 Results |
-|:-----------|----------------:|----------------:|
-| intercept  |           1.000 |           1.000 |
-| RMSE       |        7982.892 |        7368.580 |
-| Rsquared   |           0.033 |           0.002 |
-| MAE        |        2935.816 |        2920.813 |
-| RMSESD     |        2045.516 |        3402.365 |
-| RsquaredSD |           0.058 |           0.003 |
-| MAESD      |         201.116 |         436.673 |
-
-``` r
-# View results
-lmr_results
-```
-
-    ##            Model 1 Results Model 2 Results
-    ## intercept     1.000000e+00    1.000000e+00
-    ## RMSE          7.982892e+03    7.368580e+03
-    ## Rsquared      3.335327e-02    2.150332e-03
-    ## MAE           2.935816e+03    2.920813e+03
-    ## RMSESD        2.045516e+03    3.402365e+03
-    ## RsquaredSD    5.790696e-02    3.138260e-03
-    ## MAESD         2.011159e+02    4.366735e+02
 
 ## Random Forest Model
 
