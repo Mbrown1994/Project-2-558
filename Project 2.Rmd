@@ -147,7 +147,7 @@ Model1<-as.formula("shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_s
 
 
 # Fitting the model with the training data 
-fit1 <- train(Model2, data = TrainData, 
+fit1 <- train(Model1, data = TrainData, 
               method = "lm",  
               preProcess = c("center", "scale"),  
               trControl = trainControl(method = "cv", number = 10))  
@@ -155,6 +155,33 @@ fit1 <- train(Model2, data = TrainData,
 Results <- data.frame(t(fit1$results))  
 colnames(Results) <- "Model Results"
 knitr::kable(Results, digits = 3)  
+# View Results
+Results
 
+# Linear Regression Model 2:
 
+# After talking with a subject matter expert on marketing we discussed the columns available in the data set and which ones they may be most interested in seeing in a model to predict shares.
+Model2 <- lm(shares ~ weekday + global_rate_positive_words + global_rate_negative_words + title_sentiment_polarity, data=TrainData)
+
+# Fitting the model with the training data.
+fit2 <- train(shares ~ weekday + global_rate_positive_words + global_rate_negative_words + title_sentiment_polarity, 
+              data=TrainData, 
+              method= "lm", 
+              preProcess = c("center","scale"), 
+              trControl = trainControl(method="cv", number=10))
+
+# Putting together the results of Model 2
+results <- data.frame(t(fit2$results))
+colnames(results) <- "Model Results"
+knitr::kable(results, digits=3)
+# View results
+results
+
+# Putting both Linear Regression models together
+lmr_results <- data.frame(t(fit1$results), t(fit2$results))
+names(lmr_results)[1] <- "Model 1 Results"
+names(lmr_results)[2] <- "Model 2 Results"
+knitr::kable(lmr_results, digits=3)
+# View results
+lmr_results
 ```  
