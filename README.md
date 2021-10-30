@@ -3,8 +3,6 @@ Project Two
 Mary Brown and Jennifer Relihan
 10/21/2021
 
-## Data Manipulation
-
 =======
 
 ## Introduction
@@ -21,6 +19,7 @@ library(scales)
 library(corrplot)  
 library(GDAtools)
 library(gbm)
+library(shiny)
 ```
 
 ## Data Manipulation
@@ -37,21 +36,26 @@ dim(Data)
 names(Data)  
 ```
 
-    ##  [1] "url"                           "timedelta"                     "n_tokens_title"                "n_tokens_content"             
-    ##  [5] "n_unique_tokens"               "n_non_stop_words"              "n_non_stop_unique_tokens"      "num_hrefs"                    
-    ##  [9] "num_self_hrefs"                "num_imgs"                      "num_videos"                    "average_token_length"         
-    ## [13] "num_keywords"                  "data_channel_is_lifestyle"     "data_channel_is_entertainment" "data_channel_is_bus"          
-    ## [17] "data_channel_is_socmed"        "data_channel_is_tech"          "data_channel_is_world"         "kw_min_min"                   
-    ## [21] "kw_max_min"                    "kw_avg_min"                    "kw_min_max"                    "kw_max_max"                   
-    ## [25] "kw_avg_max"                    "kw_min_avg"                    "kw_max_avg"                    "kw_avg_avg"                   
-    ## [29] "self_reference_min_shares"     "self_reference_max_shares"     "self_reference_avg_sharess"    "weekday_is_monday"            
-    ## [33] "weekday_is_tuesday"            "weekday_is_wednesday"          "weekday_is_thursday"           "weekday_is_friday"            
-    ## [37] "weekday_is_saturday"           "weekday_is_sunday"             "is_weekend"                    "LDA_00"                       
-    ## [41] "LDA_01"                        "LDA_02"                        "LDA_03"                        "LDA_04"                       
-    ## [45] "global_subjectivity"           "global_sentiment_polarity"     "global_rate_positive_words"    "global_rate_negative_words"   
-    ## [49] "rate_positive_words"           "rate_negative_words"           "avg_positive_polarity"         "min_positive_polarity"        
-    ## [53] "max_positive_polarity"         "avg_negative_polarity"         "min_negative_polarity"         "max_negative_polarity"        
-    ## [57] "title_subjectivity"            "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
+    ##  [1] "url"                           "timedelta"                     "n_tokens_title"               
+    ##  [4] "n_tokens_content"              "n_unique_tokens"               "n_non_stop_words"             
+    ##  [7] "n_non_stop_unique_tokens"      "num_hrefs"                     "num_self_hrefs"               
+    ## [10] "num_imgs"                      "num_videos"                    "average_token_length"         
+    ## [13] "num_keywords"                  "data_channel_is_lifestyle"     "data_channel_is_entertainment"
+    ## [16] "data_channel_is_bus"           "data_channel_is_socmed"        "data_channel_is_tech"         
+    ## [19] "data_channel_is_world"         "kw_min_min"                    "kw_max_min"                   
+    ## [22] "kw_avg_min"                    "kw_min_max"                    "kw_max_max"                   
+    ## [25] "kw_avg_max"                    "kw_min_avg"                    "kw_max_avg"                   
+    ## [28] "kw_avg_avg"                    "self_reference_min_shares"     "self_reference_max_shares"    
+    ## [31] "self_reference_avg_sharess"    "weekday_is_monday"             "weekday_is_tuesday"           
+    ## [34] "weekday_is_wednesday"          "weekday_is_thursday"           "weekday_is_friday"            
+    ## [37] "weekday_is_saturday"           "weekday_is_sunday"             "is_weekend"                   
+    ## [40] "LDA_00"                        "LDA_01"                        "LDA_02"                       
+    ## [43] "LDA_03"                        "LDA_04"                        "global_subjectivity"          
+    ## [46] "global_sentiment_polarity"     "global_rate_positive_words"    "global_rate_negative_words"   
+    ## [49] "rate_positive_words"           "rate_negative_words"           "avg_positive_polarity"        
+    ## [52] "min_positive_polarity"         "max_positive_polarity"         "avg_negative_polarity"        
+    ## [55] "min_negative_polarity"         "max_negative_polarity"         "title_subjectivity"           
+    ## [58] "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
     ## [61] "shares"
 
 ``` r
@@ -259,7 +263,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-97-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -268,7 +272,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-97-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -277,7 +281,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-97-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -286,7 +290,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-97-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -298,7 +302,7 @@ Num_words <- ggplot(TrainData, aes(x=n_tokens_content, y=shares))+ geom_bar(stat
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-97-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -307,7 +311,7 @@ positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ ge
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-97-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -316,7 +320,7 @@ negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ ge
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-97-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -324,7 +328,7 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-97-8.png)<!-- -->
 
 ## Linear Regression Models
 
@@ -530,19 +534,48 @@ lmr_results
 
 ## Random Forest Model
 
-### My explanation will go here
+### Random Forest modeling falls under supervised learning. It builds an ensemble of decision trees which help to get a more accurate prediction. The RF model extends the idea of bagging, generally better than bagging. It creates multiple trees from bootstrap samples.
 
 ``` r
-TrainData[is.na(TrainData)] = 0
-#rfFit <- train(shares ~.,   
-               #data = TrainData, 
-               #method = "rf",  
-               #preProcess = c("center", "scale"),  
-               #trControl = trainControl(method = "repeatedcv", number = 5, repeats = 3),  
-               #tuneGrid = data.frame(mtry = seq(1,10,1)))  
+# Converting NA values back to 0
+TrainData[is.na(TrainData)] = 0  
 
-#rfFit$results
+# Fitting the model using repeated cross validation
+rfFit <- train(shares ~.,   
+               data = select(TrainData, -Popularity),
+               method = "rf",  
+               preProcess = c("center", "scale"),  
+               trControl = trainControl(method = "repeatedcv", number = 5, repeats = 3),  
+               tuneGrid = data.frame(mtry = seq(1,10,1)))  
+
+# View resampling results across tuning parameters 
+rfFit  
 ```
+
+    ## Random Forest 
+    ## 
+    ## 4941 samples
+    ##   53 predictor
+    ## 
+    ## Pre-processing: centered (58), scaled (58) 
+    ## Resampling: Cross-Validated (5 fold, repeated 3 times) 
+    ## Summary of sample sizes: 3954, 3952, 3953, 3952, 3953, 3953, ... 
+    ## Resampling results across tuning parameters:
+    ## 
+    ##   mtry  RMSE      Rsquared    MAE     
+    ##    1    7875.173  0.02554504  2875.302
+    ##    2    7868.325  0.02835705  2928.049
+    ##    3    7897.049  0.02860721  2962.133
+    ##    4    7916.786  0.02723167  2986.692
+    ##    5    7944.263  0.02739731  3006.768
+    ##    6    7963.120  0.02704421  3018.476
+    ##    7    7998.038  0.02617955  3034.097
+    ##    8    8010.448  0.02635449  3039.194
+    ##    9    8038.604  0.02597551  3054.945
+    ##   10    8069.715  0.02564457  3061.066
+    ## 
+    ## RMSE was used to select the optimal model using the smallest value.
+    ## The final value used for the model was mtry = 2.
 
 ## Boosted Tree Model
 
@@ -572,22 +605,23 @@ boostFit
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold, repeated 10 times) 
-    ## Summary of sample sizes: 4446, 4446, 4448, 4448, 4446, 4446, ... 
+    ## Summary of sample sizes: 4446, 4447, 4448, 4447, 4446, 4446, ... 
     ## Resampling results across tuning parameters:
     ## 
     ##   interaction.depth  n.trees  RMSE      Rsquared    MAE     
-    ##   1                   50      7719.940  0.02008833  2903.536
-    ##   1                  100      7746.597  0.02078634  2900.294
-    ##   1                  150      7761.190  0.02125970  2899.086
-    ##   2                   50      7746.174  0.02046634  2901.261
-    ##   2                  100      7797.127  0.01842786  2910.179
-    ##   2                  150      7834.345  0.01654140  2919.673
-    ##   3                   50      7738.569  0.02296250  2889.217
-    ##   3                  100      7803.705  0.02107666  2910.980
-    ##   3                  150      7843.434  0.01922619  2929.234
+    ##   1                   50      7644.958  0.02094688  2898.880
+    ##   1                  100      7666.984  0.02131986  2893.804
+    ##   1                  150      7700.137  0.02151835  2901.235
+    ##   2                   50      7667.594  0.02204219  2894.530
+    ##   2                  100      7719.797  0.02053635  2901.948
+    ##   2                  150      7744.920  0.01874745  2910.636
+    ##   3                   50      7678.343  0.02308474  2885.708
+    ##   3                  100      7735.705  0.02083751  2906.464
+    ##   3                  150      7788.189  0.01747060  2926.773
     ## 
     ## Tuning parameter 'shrinkage' was held constant at a value of 0.1
-    ## Tuning parameter 'n.minobsinnode' was held constant at a value of 10
+    ## Tuning parameter 'n.minobsinnode' was held constant at
+    ##  a value of 10
     ## RMSE was used to select the optimal model using the smallest value.
     ## The final values used for the model were n.trees = 50, interaction.depth = 1, shrinkage = 0.1 and n.minobsinnode = 10.
 
@@ -611,3 +645,52 @@ boostPred <- predict(boostFit_best, newdata =select(TestData, ,-shares), n.trees
 # RMSE Value for boosted tree model
 boostRMSE <- sqrt(mean((boostPred- TestData$shares)^2))
 ```
+
+## Comparisons
+
+### Predictions with the 4 models
+
+``` r
+# Prediction on the first linear model  
+pred <- predict(fit1, newdata = TestData)  
+A <- postResample(pred, obs = TestData$shares)
+
+pred2 <- predict(fit2, newdata = TestData)  
+B <- postResample(pred2, obs = TestData$shares)  
+
+pred3 <- predict(rfFit, newdata = TestData)  
+C <- postResample(pred3, obs = TestData$shares)
+
+pred4 <- predict(boostFit_best, newdata = TestData)  
+D <- postResample(pred4, obs = TestData$shares)  
+
+# A table of all prediction results  
+Predictions <- t(rbind(A[1], B[1], C[1], D[1]))  
+colnames(Predictions) <- c("Linear Model 1", "Linear Model 2", "Random Forest Model", "Boosted Tree Model")  
+Predictions
+```
+
+    ##      Linear Model 1 Linear Model 2 Random Forest Model Boosted Tree Model
+    ## RMSE       14954.05        7432.89            7334.508           7528.559
+
+### RMSE comparison to declare a model winner
+
+``` r
+# RMSE comparison
+LR1results <- sqrt(mean((pred - TestData$shares)^2))
+LR2results <- sqrt(mean((pred2 - TestData$shares)^2))  
+RFresults <- sqrt(mean((pred3 - TestData$shares)^2))
+BTresults <- sqrt(mean((pred4 - TestData$shares)^2))  
+
+# Make a table of results from the above 
+FinalResults <- c(FirstLinearModel = LR1results, SecondLinearModel = LR2results, RandomForestResults = RFresults, BoostedTreeResults = BTresults)  
+FinalWinner <- as.data.frame(FinalResults) 
+attributes(FinalWinner)$names[1] <- "Final RMSE Results"
+FinalWinner
+```
+
+    ##                     Final RMSE Results
+    ## FirstLinearModel             14954.049
+    ## SecondLinearModel             7432.890
+    ## RandomForestResults           7334.508
+    ## BoostedTreeResults            7528.559
