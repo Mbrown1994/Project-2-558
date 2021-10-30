@@ -136,7 +136,7 @@ pos_neg_join
 ```  
 
 ## Linear Regression Models  
-### My explanation of linear modeling will go here 
+### Supervised learning includes regression models, tree based methods, and k nearest neighbors. The basic linear regression model includes a response, a value of our explanatory variable for the ith observation, the y-intercept, and the slope. The model aims to show a linear approach for modeling the relationship between predictors and some response. The model is fit by minimizing the sum of squared residuals, which is equivalent to assuming normality on  errors and using maximum liklihood to estimate the beta's. In R, the basic linear model fits done with lm(). When utilizing lm() in R, statistical analysis can be found using anova() or summary(). 
 ```{r,echo=TRUE}  
 # A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model.  
 FullData <- lm(shares~., data = TrainData)  
