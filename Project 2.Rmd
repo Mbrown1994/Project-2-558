@@ -24,6 +24,7 @@ library(magrittr)
 library(scales)
 library(corrplot)  
 library(GDAtools)
+library(gbm)
 ```  
 
 ## Data Manipulation 
@@ -194,16 +195,51 @@ lmr_results
 ### My explanation will go here
 ```{r, echo = TRUE, cache = TRUE, warning = FALSE}  
 TrainData[is.na(TrainData)] = 0
-rfFit <- train(shares ~.,   
-               data = TrainData, 
-               method = "rf",  
-               preProcess = c("center", "scale"),  
-               trControl = trainControl(method = "repeatedcv", number = 5, repeats = 3),  
-               tuneGrid = data.frame(mtry = seq(1,10,1)))  
+#rfFit <- train(shares ~.,   
+               #data = TrainData, 
+               #method = "rf",  
+               #preProcess = c("center", "scale"),  
+               #trControl = trainControl(method = "repeatedcv", number = 5, repeats = 3),  
+               #tuneGrid = data.frame(mtry = seq(1,10,1)))  
 
-rfFit$results
+#rfFit$results
 ```  
 
 
-```  
+## Boosted Tree Model
+### The boosted tree model is a way to slowly train a tree so that you don't overfit. Here we use cross validation to determine the best tuning parameters - shrinkage(λ), n.trees(B), and interaction.depth (related to d). Then we take those tuning parameters and fit the model.Then we predict shares on the test data using the best model. 
+```{r}
 
+# Parameter tuning using 10-fold cross validation to determine parameter values for fitting the boosted tree model
+fitControl <- trainControl(
+                          method = "repeatedcv",
+                          number = 10,
+                          repeats = 10)
+
+# Fitting the model using repeated cross-validation
+boostFit <- train(shares ~ .,
+                  data= select(TrainData, -Popularity),
+                  method="gbm",
+                  trControl = fitControl,
+                  verbose = FALSE)
+# View re-sampling results across tuning parameters
+boostFit
+# Take the best tuning results and save as an object
+bestTune <- boostFit$bestTune
+n.tress_best <- bestTune$n.trees
+interaction.depth_best <- bestTune$interaction.depth
+shrinkage_best <- bestTune$shrinkage
+
+# Re-fit the model using the best tuning results
+boostFit_best <- gbm(shares ~ .,
+                     data=select(TrainData, -Popularity),
+                     distribution = "gaussian",
+                     n.trees = n.tress_best,
+                     shrinkage = shrinkage_best,
+                     interaction.depth = interaction.depth_best)
+
+# Predict 
+boostPred <- predict(boostFit_best, newdata =select(TestData, ,-shares), n.trees = n.tress_best)
+# RMSE Value for boosted tree model
+boostRMSE <- sqrt(mean((boostPred- TestData$shares)^2))
+```
