@@ -3,6 +3,8 @@ title: "Project Two"
 author: "Mary Brown and Jennifer Relihan"
 date: "10/21/2021"
 output: html_document
+params:
+  channel: "Entertainment"
 ---
 
 ## Data Manipulation
