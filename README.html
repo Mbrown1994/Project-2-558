@@ -642,6 +642,27 @@ body {
 ## MAESD         2.011159e+02    4.366735e+02</code></pre>
 <h2 id="random-forest-model">Random Forest Model</h2>
 <h3 id="my-explanation-will-go-here">My explanation will go here</h3>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>TrainData[<span class="fu">is.na</span>(TrainData)] <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>rfFit <span class="ot">&lt;-</span> <span class="fu">train</span>(shares <span class="sc">~</span>.,   </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> TrainData, </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">method =</span> <span class="st">&quot;rf&quot;</span>,  </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">preProcess =</span> <span class="fu">c</span>(<span class="st">&quot;center&quot;</span>, <span class="st">&quot;scale&quot;</span>),  </span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;repeatedcv&quot;</span>, <span class="at">number =</span> <span class="dv">5</span>, <span class="at">repeats =</span> <span class="dv">3</span>),  </span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">tuneGrid =</span> <span class="fu">data.frame</span>(<span class="at">mtry =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">10</span>,<span class="dv">1</span>)))  </span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>rfFit<span class="sc">$</span>results</span></code></pre></div>
+<pre><code>##    mtry     RMSE   Rsquared      MAE   RMSESD RsquaredSD    MAESD
+## 1     1 7781.240 0.06100307 2749.640 1157.281 0.02186665 117.4812
+## 2     2 7694.554 0.07406643 2678.867 1153.050 0.02377769 131.6007
+## 3     3 7672.960 0.07927831 2637.817 1132.841 0.02536711 132.4770
+## 4     4 7664.694 0.08169573 2616.303 1128.780 0.02702173 128.3320
+## 5     5 7646.672 0.08785450 2586.561 1105.437 0.02777586 129.7702
+## 6     6 7661.076 0.08751181 2564.491 1101.612 0.02880437 137.0012
+## 7     7 7684.233 0.08743555 2556.221 1085.422 0.03066177 135.4831
+## 8     8 7674.473 0.08937341 2542.526 1080.345 0.02897009 131.1469
+## 9     9 7694.630 0.08925971 2534.873 1062.529 0.02912694 129.7102
+## 10   10 7715.025 0.08893520 2530.377 1057.248 0.02898904 127.9736</code></pre>
+<p>```</p>
 
 </body>
 </html>

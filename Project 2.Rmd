@@ -190,7 +190,17 @@ lmr_results
 
 ## Random Forest Model  
 ### My explanation will go here
-```{r, echo = TRUE, cache = TRUE}  
+```{r, echo = TRUE, cache = TRUE, warning = FALSE}  
+TrainData[is.na(TrainData)] = 0
+rfFit <- train(shares ~.,   
+               data = TrainData, 
+               method = "rf",  
+               preProcess = c("center", "scale"),  
+               trControl = trainControl(method = "repeatedcv", number = 5, repeats = 3),  
+               tuneGrid = data.frame(mtry = seq(1,10,1)))  
+
+rfFit$results
+```  
 
 
 ```  

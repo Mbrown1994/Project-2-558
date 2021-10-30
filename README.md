@@ -263,7 +263,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -272,7 +272,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -281,7 +281,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -290,7 +290,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -302,7 +302,7 @@ Num_words <- ggplot(TrainData, aes(x=n_tokens_content, y=shares))+ geom_bar(stat
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -311,7 +311,7 @@ positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ ge
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -320,7 +320,7 @@ negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ ge
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -328,7 +328,7 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-8.png)<!-- -->
 
 ## Linear Regression Models
 
@@ -535,3 +535,29 @@ lmr_results
 ## Random Forest Model
 
 ### My explanation will go here
+
+``` r
+TrainData[is.na(TrainData)] = 0
+rfFit <- train(shares ~.,   
+               data = TrainData, 
+               method = "rf",  
+               preProcess = c("center", "scale"),  
+               trControl = trainControl(method = "repeatedcv", number = 5, repeats = 3),  
+               tuneGrid = data.frame(mtry = seq(1,10,1)))  
+
+rfFit$results
+```
+
+    ##    mtry     RMSE   Rsquared      MAE   RMSESD RsquaredSD    MAESD
+    ## 1     1 7781.240 0.06100307 2749.640 1157.281 0.02186665 117.4812
+    ## 2     2 7694.554 0.07406643 2678.867 1153.050 0.02377769 131.6007
+    ## 3     3 7672.960 0.07927831 2637.817 1132.841 0.02536711 132.4770
+    ## 4     4 7664.694 0.08169573 2616.303 1128.780 0.02702173 128.3320
+    ## 5     5 7646.672 0.08785450 2586.561 1105.437 0.02777586 129.7702
+    ## 6     6 7661.076 0.08751181 2564.491 1101.612 0.02880437 137.0012
+    ## 7     7 7684.233 0.08743555 2556.221 1085.422 0.03066177 135.4831
+    ## 8     8 7674.473 0.08937341 2542.526 1080.345 0.02897009 131.1469
+    ## 9     9 7694.630 0.08925971 2534.873 1062.529 0.02912694 129.7102
+    ## 10   10 7715.025 0.08893520 2530.377 1057.248 0.02898904 127.9736
+
+\`\`\`
