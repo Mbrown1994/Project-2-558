@@ -36,48 +36,6 @@ dim(Data)
 names(Data)  
 ```
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    ##  [1] "url"                           "timedelta"                     "n_tokens_title"               
-    ##  [4] "n_tokens_content"              "n_unique_tokens"               "n_non_stop_words"             
-    ##  [7] "n_non_stop_unique_tokens"      "num_hrefs"                     "num_self_hrefs"               
-    ## [10] "num_imgs"                      "num_videos"                    "average_token_length"         
-    ## [13] "num_keywords"                  "data_channel_is_lifestyle"     "data_channel_is_entertainment"
-    ## [16] "data_channel_is_bus"           "data_channel_is_socmed"        "data_channel_is_tech"         
-    ## [19] "data_channel_is_world"         "kw_min_min"                    "kw_max_min"                   
-    ## [22] "kw_avg_min"                    "kw_min_max"                    "kw_max_max"                   
-    ## [25] "kw_avg_max"                    "kw_min_avg"                    "kw_max_avg"                   
-    ## [28] "kw_avg_avg"                    "self_reference_min_shares"     "self_reference_max_shares"    
-    ## [31] "self_reference_avg_sharess"    "weekday_is_monday"             "weekday_is_tuesday"           
-    ## [34] "weekday_is_wednesday"          "weekday_is_thursday"           "weekday_is_friday"            
-    ## [37] "weekday_is_saturday"           "weekday_is_sunday"             "is_weekend"                   
-    ## [40] "LDA_00"                        "LDA_01"                        "LDA_02"                       
-    ## [43] "LDA_03"                        "LDA_04"                        "global_subjectivity"          
-    ## [46] "global_sentiment_polarity"     "global_rate_positive_words"    "global_rate_negative_words"   
-    ## [49] "rate_positive_words"           "rate_negative_words"           "avg_positive_polarity"        
-    ## [52] "min_positive_polarity"         "max_positive_polarity"         "avg_negative_polarity"        
-    ## [55] "min_negative_polarity"         "max_negative_polarity"         "title_subjectivity"           
-    ## [58] "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
-=======
-<<<<<<< HEAD
-    ##  [1] "url"                           "timedelta"                     "n_tokens_title"                "n_tokens_content"             
-    ##  [5] "n_unique_tokens"               "n_non_stop_words"              "n_non_stop_unique_tokens"      "num_hrefs"                    
-    ##  [9] "num_self_hrefs"                "num_imgs"                      "num_videos"                    "average_token_length"         
-    ## [13] "num_keywords"                  "data_channel_is_lifestyle"     "data_channel_is_entertainment" "data_channel_is_bus"          
-    ## [17] "data_channel_is_socmed"        "data_channel_is_tech"          "data_channel_is_world"         "kw_min_min"                   
-    ## [21] "kw_max_min"                    "kw_avg_min"                    "kw_min_max"                    "kw_max_max"                   
-    ## [25] "kw_avg_max"                    "kw_min_avg"                    "kw_max_avg"                    "kw_avg_avg"                   
-    ## [29] "self_reference_min_shares"     "self_reference_max_shares"     "self_reference_avg_sharess"    "weekday_is_monday"            
-    ## [33] "weekday_is_tuesday"            "weekday_is_wednesday"          "weekday_is_thursday"           "weekday_is_friday"            
-    ## [37] "weekday_is_saturday"           "weekday_is_sunday"             "is_weekend"                    "LDA_00"                       
-    ## [41] "LDA_01"                        "LDA_02"                        "LDA_03"                        "LDA_04"                       
-    ## [45] "global_subjectivity"           "global_sentiment_polarity"     "global_rate_positive_words"    "global_rate_negative_words"   
-    ## [49] "rate_positive_words"           "rate_negative_words"           "avg_positive_polarity"         "min_positive_polarity"        
-    ## [53] "max_positive_polarity"         "avg_negative_polarity"         "min_negative_polarity"         "max_negative_polarity"        
-    ## [57] "title_subjectivity"            "title_sentiment_polarity"      "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
-=======
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
     ##  [1] "url"                           "timedelta"                    
     ##  [3] "n_tokens_title"                "n_tokens_content"             
     ##  [5] "n_unique_tokens"               "n_non_stop_words"             
@@ -108,11 +66,6 @@ names(Data)
     ## [55] "min_negative_polarity"         "max_negative_polarity"        
     ## [57] "title_subjectivity"            "title_sentiment_polarity"     
     ## [59] "abs_title_subjectivity"        "abs_title_sentiment_polarity" 
-<<<<<<< HEAD
-=======
->>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
->>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
     ## [61] "shares"
 
 ``` r
@@ -320,23 +273,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-49-1.png)<!-- -->
-=======
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
-=======
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
->>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
-=======
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
->>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
->>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -345,23 +282,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-49-2.png)<!-- -->
-=======
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-33-2.png)<!-- -->
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-31-2.png)<!-- -->
-=======
-![](README_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
->>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
-=======
-![](README_files/figure-gfm/unnamed-chunk-17-2.png)<!-- -->
->>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
->>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
+![](README_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -370,11 +291,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-49-3.png)<!-- -->
-=======
-![](README_files/figure-gfm/unnamed-chunk-33-3.png)<!-- -->
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
+![](README_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -383,11 +300,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-49-4.png)<!-- -->
-=======
-![](README_files/figure-gfm/unnamed-chunk-33-4.png)<!-- -->
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
+![](README_files/figure-gfm/unnamed-chunk-4-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -399,23 +312,7 @@ Num_words <- ggplot(TrainData, aes(x=n_tokens_content, y=shares))+ geom_bar(stat
 Num_words
 ```
 
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-49-5.png)<!-- -->
-=======
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-33-5.png)<!-- -->
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-31-3.png)<!-- -->
-=======
-![](README_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->
->>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
-=======
-![](README_files/figure-gfm/unnamed-chunk-17-5.png)<!-- -->
->>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
->>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
+![](README_files/figure-gfm/unnamed-chunk-4-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -424,23 +321,7 @@ positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ ge
 positivity
 ```
 
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-49-6.png)<!-- -->
-=======
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-33-6.png)<!-- -->
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-31-4.png)<!-- -->
-=======
-![](README_files/figure-gfm/unnamed-chunk-12-4.png)<!-- -->
->>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
-=======
-![](README_files/figure-gfm/unnamed-chunk-17-6.png)<!-- -->
->>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
->>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
+![](README_files/figure-gfm/unnamed-chunk-4-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -449,23 +330,7 @@ negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ ge
 negativity
 ```
 
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-49-7.png)<!-- -->
-=======
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-33-7.png)<!-- -->
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-31-5.png)<!-- -->
-=======
-![](README_files/figure-gfm/unnamed-chunk-12-5.png)<!-- -->
->>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
-=======
-![](README_files/figure-gfm/unnamed-chunk-17-7.png)<!-- -->
->>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
->>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
+![](README_files/figure-gfm/unnamed-chunk-4-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -473,22 +338,7 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-49-8.png)<!-- -->
-=======
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-33-8.png)<!-- -->
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-![](README_files/figure-gfm/unnamed-chunk-31-6.png)<!-- -->
-=======
-![](README_files/figure-gfm/unnamed-chunk-12-6.png)<!-- -->
->>>>>>> eaa0f42d36e28caee7937468d5b27a08ab45a038
-=======
-![](README_files/figure-gfm/unnamed-chunk-17-8.png)<!-- -->
->>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
+![](README_files/figure-gfm/unnamed-chunk-4-8.png)<!-- -->
 
 ## Linear Regression Models
 
@@ -596,10 +446,6 @@ knitr::kable(Results, digits = 3)
 |            | Model Results |
 |:-----------|--------------:|
 | intercept  |         1.000 |
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
 | RMSE       |      7982.892 |
 | Rsquared   |         0.033 |
 | MAE        |      2935.816 |
@@ -607,7 +453,6 @@ knitr::kable(Results, digits = 3)
 | RsquaredSD |         0.058 |
 | MAESD      |       201.116 |
 
-<<<<<<< HEAD
 ``` r
 # View Results
 Results
@@ -696,17 +541,7 @@ lmr_results
     ## RMSESD        2.045516e+03    3.402365e+03
     ## RsquaredSD    5.790696e-02    3.138260e-03
     ## MAESD         2.011159e+02    4.366735e+02
-=======
+
 ## Random Forest Model
 
 ### My explanation will go here
-=======
-| RMSE       |      7763.012 |
-| Rsquared   |         0.066 |
-| MAE        |      2871.004 |
-| RMSESD     |      1995.422 |
-| RsquaredSD |         0.146 |
-| MAESD      |       232.692 |
->>>>>>> 99d651735bcefe4e62e440a2959a575a2f423470
->>>>>>> 11d46df84df86a09dc6fe3d3f325a311d7e0d3eb
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082

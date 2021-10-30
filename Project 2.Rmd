@@ -153,7 +153,6 @@ fit1 <- train(Model1, data = TrainData,
 Results <- data.frame(t(fit1$results))  
 colnames(Results) <- "Model Results"
 knitr::kable(Results, digits = 3)  
-<<<<<<< HEAD
 # View Results
 Results
 
@@ -183,7 +182,7 @@ names(lmr_results)[2] <- "Model 2 Results"
 knitr::kable(lmr_results, digits=3)
 # View results
 lmr_results
-=======
+
 
 ```  
 
@@ -192,6 +191,5 @@ lmr_results
 ```{r, echo = TRUE, cache = TRUE}  
 
 
->>>>>>> 46cb1fd19d6616bb94307d931ec0c89a7c892082
 ```  
 
