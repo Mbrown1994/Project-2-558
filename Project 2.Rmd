@@ -10,7 +10,16 @@ params:
 =======
 
 ## Introduction
+This report uses the Online News Popularity Data Set from the UCI Machine Learning Repository. The data set summarizes information about articles published by Mashable over the course of two years.There are 39,644 rows of data and 61 columns. The columns are made up of mostly numeric attributes but also contain an integer and character column.
 
+Our target variable in this data set is shares. This column represents the number of shares in social networks thus showing its popularity.
+
+We've used multiple columns in this data set in our exploratory data analysis and created a few of our own to assist in exploration.
+  We created a column called Popularity which will rate by either "Popular" or "Unpopular." To do this, we found the median value for the amount of shares. 
+  We also looked at the weekdays vs weekend, the average shares of referenced articles in Mashable (self_reference_avg_shares) ,the number of videos (num_videos) and number of images (num_imgs), the number of words in a piece of content (n_tokens_content), and the rate of positive or negative words in the content (global_rate_positive_words, global_rate_negative_words). 
+
+The purpose of this analysis is to attempt to build a model that can predict shares by using variables in the dataset to help inform the model. In this report we test two versions of linear regression models, a random forest model, and a boosted tree model.In order to do this we split our data set into a training (70% of the data) and a test set (30% of the data). 
+  
 
 ## Required to run this document  
 ```{r, echo = TRUE}  
@@ -29,21 +38,27 @@ library(shiny)
 ## Data Manipulation 
 ```{r,echo=TRUE, message=TRUE} 
 # Here we read in the data and learn more about the dimensions as well as different column names.
-Data<-read.csv("OnlineNewsPopularity.csv")  
+Data<-read.csv("OnlineNewsPopularity.csv") 
 dim(Data)  
 names(Data)  
 str(Data)  
 
-# After reviewing the attributes information on the website, we need to remove the non-predictive variables which are URL and Time Delta. Then, we need to subset the data by channels.  
-Data <- Data %>% select(-url, -timedelta)  
-EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %>% select(-starts_with("data_channel_is_"))  
+# Making a column in the Data table with the name of the data channel.
+Data<- Data %>% mutate(channel = ifelse(data_channel_is_lifestyle ==1, 'Lifestyle',
+                               ifelse(data_channel_is_entertainment ==1, 'Entertainment',
+                                    ifelse(data_channel_is_bus==1, "Business", 
+                                    ifelse(data_channel_is_socmed ==1, "Social Media",
+                                    ifelse(data_channel_is_tech ==1, "Tech",
+                                    ifelse(data_channel_is_world ==1, "World", "Null"  
+                                           )))))))
 
 # Check for any missing values  
-sum(is.na(Data))  
+sum(is.na(Data))
+
 
 # In order to work with days of the week, we created a column that shows all of the days of the week by shares.  
 Days = c('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')  
-EntertainmentChannel<- EntertainmentChannel %>% mutate(weekday = ifelse(weekday_is_monday==1, 'Monday',  
+Data<- Data %>% mutate(weekday = ifelse(weekday_is_monday==1, 'Monday',  
                                     ifelse(weekday_is_tuesday==1, 'Tuesday',   
                                     ifelse(weekday_is_wednesday==1, "Wednesday", 
                                     ifelse(weekday_is_thursday==1, "Thursday",
@@ -51,16 +66,31 @@ EntertainmentChannel<- EntertainmentChannel %>% mutate(weekday = ifelse(weekday_
                                     ifelse(weekday_is_saturday==1, "Saturday", "Sunday"  
                                            ))))))) %>% mutate(weekday = factor(weekday, levels = Days))  
 
+
+# After reviewing the attributes information on the website, we need to remove the non-predictive variables which are URL and Time Delta.
+Data <- Data %>% select(-url, -timedelta)  
+
+##################################################
+
+#Adding in Automation:
+params$channel
+# Subset the data by channels and remove columns starting with "data_channel_is"  
+channelData <- Data %>% filter(channel == params$channel) %>% select(-starts_with("data_channel_is_"))
+
+##################################################
+
+
 # We would like to create a popularity column by shares for future analysis. This popularity column will rate by either "Popular" or "Unpopular." To do this, we found the median value for the amount of shares. 
-ShareSummary <- EntertainmentChannel %>% summarize(median = median(shares))  
-EntertainmentChannel <- EntertainmentChannel %>% mutate(Popularity = ifelse(shares>1200, "Popular","Unpopular"))  
+ShareSummary <- channelData %>% summarize(median = median(shares))  
+channelData <- channelData %>% mutate(Popularity = ifelse(shares>1200, "Popular","Unpopular"))  
+
 
 # Before doing any exploratory data analysis (EDA), we need to split the data -70% train and 30% test.
-NumericData <- dplyr::select_if(EntertainmentChannel, is.numeric)
+NumericData <- dplyr::select_if(channelData, is.numeric)
 set.seed(123)
-DataIndex<-createDataPartition(y = EntertainmentChannel$shares, p = 0.7, list = FALSE)  
-TrainData <- EntertainmentChannel[DataIndex,]
-TestData <- EntertainmentChannel[-DataIndex,]  
+DataIndex<-createDataPartition(y = channelData$shares, p = 0.7, list = FALSE)  
+TrainData <- channelData[DataIndex,]
+TestData <- channelData[-DataIndex,]  
 dim(TrainData)  
 dim(TestData)
 
@@ -283,15 +313,6 @@ knitr::kable(FinalResults2, digits = 4, caption = "This table shows RMSE compari
 
 ## Automation
 ```{r}
-# Making a column in the Data table with the name of the data channel.
-Data<- Data %>% mutate(channel = ifelse(data_channel_is_lifestyle ==1, 'Lifestyle',
-                               ifelse(data_channel_is_entertainment ==1, 'Entertainment',
-                                    ifelse(data_channel_is_bus==1, "Business", 
-                                    ifelse(data_channel_is_socmed ==1, "Social Media",
-                                    ifelse(data_channel_is_tech ==1, "Tech",
-                                    ifelse(data_channel_is_world ==1, "World", "Null"  
-                                           )))))))
-
 # Get unique channels
 channelIDs <- unique(Data$channel)
 # Removing Null values
