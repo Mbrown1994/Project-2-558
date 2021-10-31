@@ -7,6 +7,33 @@ Mary Brown and Jennifer Relihan
 
 ## Introduction
 
+This report uses the Online News Popularity Data Set from the UCI
+Machine Learning Repository. The data set summarizes information about
+articles published by Mashable over the course of two years.There are
+39,644 rows of data and 61 columns. The columns are made up of mostly
+numeric attributes but also contain an integer and character column.
+
+Our target variable in this data set is shares. This column represents
+the number of shares in social networks thus showing its popularity.
+
+We’ve used multiple columns in this data set in our exploratory data
+analysis and created a few of our own to assist in exploration. We
+created a column called Popularity which will rate by either “Popular”
+or “Unpopular.” To do this, we found the median value for the amount of
+shares. We also looked at the weekdays vs weekend, the average shares of
+referenced articles in Mashable (self\_reference\_avg\_shares) ,the
+number of videos (num\_videos) and number of images (num\_imgs), the
+number of words in a piece of content (n\_tokens\_content), and the rate
+of positive or negative words in the content
+(global\_rate\_positive\_words, global\_rate\_negative\_words).
+
+The purpose of this analysis is to attempt to build a model that can
+predict shares by using variables in the dataset to help inform the
+model. In this report we test two versions of linear regression models,
+a random forest model, and a boosted tree model.In order to do this we
+split our data set into a training (70% of the data) and a test set (30%
+of the data).
+
 ## Required to run this document
 
 ``` r
@@ -16,7 +43,6 @@ library(ggplot2)
 library(ggpubr)  
 library(magrittr)  
 library(scales)
-library(corrplot)  
 library(GDAtools)
 library(gbm)
 library(shiny)
@@ -26,7 +52,7 @@ library(shiny)
 
 ``` r
 # Here we read in the data and learn more about the dimensions as well as different column names.
-Data<-read.csv("OnlineNewsPopularity.csv")  
+Data<-read.csv("OnlineNewsPopularity.csv") 
 dim(Data)  
 ```
 
@@ -126,12 +152,17 @@ str(Data)
     ##  $ shares                       : int  593 711 1500 1200 505 855 556 891 3600 710 ...
 
 ``` r
-# After reviewing the attributes information on the website, we need to remove the non-predictive variables which are URL and Time Delta. Then, we need to subset the data by channels.  
-Data <- Data %>% select(-url, -timedelta)  
-EntertainmentChannel <- Data %>% filter(data_channel_is_entertainment == TRUE) %>% select(-starts_with("data_channel_is_"))  
+# Making a column in the Data table with the name of the data channel.
+Data<- Data %>% mutate(channel = ifelse(data_channel_is_lifestyle ==1, 'Lifestyle',
+                               ifelse(data_channel_is_entertainment ==1, 'Entertainment',
+                                    ifelse(data_channel_is_bus==1, "Business", 
+                                    ifelse(data_channel_is_socmed ==1, "Social Media",
+                                    ifelse(data_channel_is_tech ==1, "Tech",
+                                    ifelse(data_channel_is_world ==1, "World", "Null"  
+                                           )))))))
 
 # Check for any missing values  
-sum(is.na(Data))  
+sum(is.na(Data))
 ```
 
     ## [1] 0
@@ -139,7 +170,7 @@ sum(is.na(Data))
 ``` r
 # In order to work with days of the week, we created a column that shows all of the days of the week by shares.  
 Days = c('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')  
-EntertainmentChannel<- EntertainmentChannel %>% mutate(weekday = ifelse(weekday_is_monday==1, 'Monday',  
+Data<- Data %>% mutate(weekday = ifelse(weekday_is_monday==1, 'Monday',  
                                     ifelse(weekday_is_tuesday==1, 'Tuesday',   
                                     ifelse(weekday_is_wednesday==1, "Wednesday", 
                                     ifelse(weekday_is_thursday==1, "Thursday",
@@ -147,26 +178,46 @@ EntertainmentChannel<- EntertainmentChannel %>% mutate(weekday = ifelse(weekday_
                                     ifelse(weekday_is_saturday==1, "Saturday", "Sunday"  
                                            ))))))) %>% mutate(weekday = factor(weekday, levels = Days))  
 
+
+# After reviewing the attributes information on the website, we need to remove the non-predictive variables which are URL and Time Delta.
+Data <- Data %>% select(-url, -timedelta)  
+
+##################################################
+
+#Adding in Automation:
+params$channel
+```
+
+    ## [1] "Entertainment"
+
+``` r
+# Subset the data by channels and remove columns starting with "data_channel_is"  
+channelData <- Data %>% filter(channel == params$channel) %>% select(-starts_with("data_channel_is_"))
+
+##################################################
+
+
 # We would like to create a popularity column by shares for future analysis. This popularity column will rate by either "Popular" or "Unpopular." To do this, we found the median value for the amount of shares. 
-ShareSummary <- EntertainmentChannel %>% summarize(median = median(shares))  
-EntertainmentChannel <- EntertainmentChannel %>% mutate(Popularity = ifelse(shares>1200, "Popular","Unpopular"))  
+ShareSummary <- channelData %>% summarize(median = median(shares))  
+channelData <- channelData %>% mutate(Popularity = ifelse(shares>1200, "Popular","Unpopular"))  
+
 
 # Before doing any exploratory data analysis (EDA), we need to split the data -70% train and 30% test.
-NumericData <- dplyr::select_if(EntertainmentChannel, is.numeric)
+NumericData <- dplyr::select_if(channelData, is.numeric)
 set.seed(123)
-DataIndex<-createDataPartition(y = EntertainmentChannel$shares, p = 0.7, list = FALSE)  
-TrainData <- EntertainmentChannel[DataIndex,]
-TestData <- EntertainmentChannel[-DataIndex,]  
+DataIndex<-createDataPartition(y = channelData$shares, p = 0.7, list = FALSE)  
+TrainData <- channelData[DataIndex,]
+TestData <- channelData[-DataIndex,]  
 dim(TrainData)  
 ```
 
-    ## [1] 4941   55
+    ## [1] 4941   56
 
 ``` r
 dim(TestData)
 ```
 
-    ## [1] 2116   55
+    ## [1] 2116   56
 
 ## Exploratory Data Analysis
 
@@ -263,7 +314,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-67-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -272,7 +323,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-67-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -281,7 +332,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-67-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -290,7 +341,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-67-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -302,7 +353,7 @@ Num_words <- ggplot(TrainData, aes(x=n_tokens_content, y=shares))+ geom_bar(stat
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-67-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -311,7 +362,7 @@ positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ ge
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-67-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -320,7 +371,7 @@ negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ ge
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-67-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -328,98 +379,17 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-67-8.png)<!-- -->
 
 ## Linear Regression Models
 
 ### Supervised learning includes regression models, tree based methods, and k nearest neighbors. The basic linear regression model includes a response, a value of our explanatory variable for the ith observation, the y-intercept, and the slope. The model aims to show a linear approach for modeling the relationship between predictors and some response. The model is fit by minimizing the sum of squared residuals, which is equivalent to assuming normality on errors and using maximum liklihood to estimate the beta’s. In R, the basic linear model fits done with lm(). When utilizing lm() in R, statistical analysis can be found using anova() or summary().
 
 ``` r
-# A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model.  
-FullData <- lm(shares~., data = TrainData)  
-summary(FullData) 
-```
+# A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model. This is the model I chose with some significant predictors  
+TrainData <- TrainData %>% select(-channel)  
+TestData <- TestData %>% select(-channel)
 
-    ## 
-    ## Call:
-    ## lm(formula = shares ~ ., data = TrainData)
-    ## 
-    ## Residuals:
-    ##    Min     1Q Median     3Q    Max 
-    ## -29936  -2470   -398    767 201109 
-    ## 
-    ## Coefficients: (11 not defined because of singularities)
-    ##                                Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                   2.614e+02  3.603e+03   0.073  0.94216    
-    ## n_tokens_title               -9.798e+00  5.413e+01  -0.181  0.85637    
-    ## n_tokens_content              1.691e+00  3.856e-01   4.386 1.18e-05 ***
-    ## n_unique_tokens               1.060e+04  3.623e+03   2.925  0.00346 ** 
-    ## n_non_stop_words                     NA         NA      NA       NA    
-    ## n_non_stop_unique_tokens     -6.688e+03  3.103e+03  -2.156  0.03116 *  
-    ## num_hrefs                     6.602e+00  9.836e+00   0.671  0.50212    
-    ## num_self_hrefs               -1.031e+02  4.181e+01  -2.467  0.01367 *  
-    ## num_imgs                     -1.750e+01  1.313e+01  -1.332  0.18289    
-    ## num_videos                   -2.136e+01  2.050e+01  -1.042  0.29765    
-    ## average_token_length          3.165e+02  4.777e+02   0.663  0.50767    
-    ## num_keywords                 -1.450e+02  6.971e+01  -2.080  0.03757 *  
-    ## kw_min_min                    5.127e+00  3.433e+00   1.494  0.13536    
-    ## kw_max_min                    1.365e+00  1.359e-01  10.047  < 2e-16 ***
-    ## kw_avg_min                   -5.536e+00  6.857e-01  -8.073 8.63e-16 ***
-    ## kw_min_max                   -7.995e-03  4.168e-03  -1.918  0.05513 .  
-    ## kw_max_max                   -1.227e-04  1.206e-03  -0.102  0.91895    
-    ## kw_avg_max                    9.785e-05  1.923e-03   0.051  0.95943    
-    ## kw_min_avg                   -1.150e-01  1.571e-01  -0.732  0.46407    
-    ## kw_max_avg                    1.317e-01  5.934e-02   2.219  0.02652 *  
-    ## kw_avg_avg                    4.876e-01  2.952e-01   1.652  0.09863 .  
-    ## self_reference_min_shares     2.440e-03  2.466e-02   0.099  0.92121    
-    ## self_reference_max_shares     6.438e-03  8.510e-03   0.757  0.44937    
-    ## self_reference_avg_sharess    4.345e-03  2.529e-02   0.172  0.86356    
-    ## weekday_is_monday             5.508e+02  4.811e+02   1.145  0.25229    
-    ## weekday_is_tuesday            2.139e+02  4.829e+02   0.443  0.65777    
-    ## weekday_is_wednesday          3.885e+02  4.839e+02   0.803  0.42210    
-    ## weekday_is_thursday           4.010e+02  4.850e+02   0.827  0.40841    
-    ## weekday_is_friday             4.395e+02  5.024e+02   0.875  0.38175    
-    ## weekday_is_saturday          -5.241e+02  6.165e+02  -0.850  0.39528    
-    ## weekday_is_sunday                    NA         NA      NA       NA    
-    ## is_weekend                           NA         NA      NA       NA    
-    ## LDA_00                       -1.360e+03  1.673e+03  -0.813  0.41645    
-    ## LDA_01                        6.492e+02  1.234e+03   0.526  0.59900    
-    ## LDA_02                       -1.256e+03  1.441e+03  -0.872  0.38349    
-    ## LDA_03                        1.745e+02  1.231e+03   0.142  0.88733    
-    ## LDA_04                               NA         NA      NA       NA    
-    ## global_subjectivity           3.160e+03  1.573e+03   2.009  0.04455 *  
-    ## global_sentiment_polarity     5.475e+03  3.113e+03   1.759  0.07865 .  
-    ## global_rate_positive_words   -1.785e+04  1.439e+04  -1.240  0.21491    
-    ## global_rate_negative_words   -1.423e+01  2.452e+04  -0.001  0.99954    
-    ## rate_positive_words          -1.214e+03  2.187e+03  -0.555  0.57865    
-    ## rate_negative_words                  NA         NA      NA       NA    
-    ## avg_positive_polarity        -6.555e+02  2.495e+03  -0.263  0.79275    
-    ## min_positive_polarity        -1.005e+03  2.203e+03  -0.456  0.64833    
-    ## max_positive_polarity        -1.593e+02  8.161e+02  -0.195  0.84523    
-    ## avg_negative_polarity        -6.739e+02  2.213e+03  -0.304  0.76080    
-    ## min_negative_polarity        -2.937e+00  7.942e+02  -0.004  0.99705    
-    ## max_negative_polarity         7.658e+02  1.841e+03   0.416  0.67751    
-    ## title_subjectivity           -1.156e+02  4.860e+02  -0.238  0.81204    
-    ## title_sentiment_polarity     -3.067e+02  4.337e+02  -0.707  0.47952    
-    ## abs_title_subjectivity        3.577e+02  6.552e+02   0.546  0.58519    
-    ## abs_title_sentiment_polarity  1.538e+03  6.863e+02   2.241  0.02508 *  
-    ## weekdayMonday                        NA         NA      NA       NA    
-    ## weekdayTuesday                       NA         NA      NA       NA    
-    ## weekdayWednesday                     NA         NA      NA       NA    
-    ## weekdayThursday                      NA         NA      NA       NA    
-    ## weekdayFriday                        NA         NA      NA       NA    
-    ## weekdaySaturday                      NA         NA      NA       NA    
-    ## PopularityUnpopular          -4.360e+03  2.265e+02 -19.247  < 2e-16 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 7472 on 4753 degrees of freedom
-    ##   (139 observations deleted due to missingness)
-    ## Multiple R-squared:  0.1562, Adjusted R-squared:  0.1477 
-    ## F-statistic: 18.34 on 48 and 4753 DF,  p-value: < 2.2e-16
-
-``` r
-# This is the model I chose with some significant predictors 
 Model1<-as.formula("shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity")  
 
 # Fitting the model with the training data 
@@ -579,7 +549,7 @@ rfFit
 
 ## Boosted Tree Model
 
-### The boosted tree model is a way to slowly train a tree so that you don’t overfit. Here we use cross validation to determine the best tuning parameters - shrinkage(λ), n.trees(B), and interaction.depth (related to d). Then we take those tuning parameters and fit the model.Then we predict shares on the test data using the best model.
+### The boosted tree model is a way to slowly train a tree so that you don’t overfit. Here we use cross validation to determine the best tuning parameters - shrinkage(λ - slows the fitting process), n.trees(B- how many times it’s repeated), and interaction.depth (related to d). Then we take those tuning parameters and fit the model.Then we predict shares on the test data using the best model.
 
 ``` r
 # Parameter tuning using 10-fold cross validation to determine parameter values for fitting the boosted tree model
@@ -681,8 +651,8 @@ BTresults <- sqrt(mean((pred4 - TestData$shares)^2))
 
 # Make a table of results from the above  
 FinalResults <- rbind(LR1results, LR2results, RFresults, BTresults)
-row.names(FinalResults2) <- c("Linear 1", "Linear 2", "RF Model", "BT Model")  
-knitr::kable(FinalResults2, digits = 4, caption = "This table shows RMSE comparisons of each model. The model with the lowest RMSE value is declared the winning model.")
+row.names(FinalResults) <- c("Linear 1", "Linear 2", "RF Model", "BT Model")  
+knitr::kable(FinalResults, digits = 4, caption = "This table shows RMSE comparisons of each model. The model with the lowest RMSE value is declared the winning model.")
 ```
 
 |          |           |
@@ -694,3 +664,26 @@ knitr::kable(FinalResults2, digits = 4, caption = "This table shows RMSE compari
 
 This table shows RMSE comparisons of each model. The model with the
 lowest RMSE value is declared the winning model.
+
+## Automation
+
+``` r
+# Get unique channels
+channelIDs <- unique(Data$channel)
+
+# Removing Null values
+channelIDs <- c("Entertainment", "Business", "Tech", "Lifestyle", "World", "Social Media")
+
+# Create file names
+output_file <- paste0(channelIDs, ".md")
+
+# Commented out for right now
+# Create a list for each channel with just the channel name
+# params= lapply(channelIDs, FUN = function(x){list(channel=x)})  
+
+# Put into a data frame  
+reports <- tibble(output_file, channelIDs)  
+
+# Rename channelid columns to params  
+colnames(reports) <- c("output_file", "params")
+```
