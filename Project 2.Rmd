@@ -29,7 +29,6 @@ library(ggplot2)
 library(ggpubr)  
 library(magrittr)  
 library(scales)
-library(corrplot)  
 library(GDAtools)
 library(gbm)
 library(shiny)
@@ -171,11 +170,7 @@ pos_neg_join
 ## Linear Regression Models  
 ### Supervised learning includes regression models, tree based methods, and k nearest neighbors. The basic linear regression model includes a response, a value of our explanatory variable for the ith observation, the y-intercept, and the slope. The model aims to show a linear approach for modeling the relationship between predictors and some response. The model is fit by minimizing the sum of squared residuals, which is equivalent to assuming normality on  errors and using maximum liklihood to estimate the beta's. In R, the basic linear model fits done with lm(). When utilizing lm() in R, statistical analysis can be found using anova() or summary(). 
 ```{r,echo=TRUE}  
-# A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model.  
-FullData <- lm(shares~., data = TrainData)  
-summary(FullData) 
-
-# This is the model I chose with some significant predictors 
+# A summary on the full model shows predictors with significant p-values. I selected predictors with significant p-values to further explore for my linear regression model. This is the model I chose with some significant predictors  
 Model1<-as.formula("shares ~ n_unique_tokens + kw_max_min + kw_avg_min + n_non_stop_unique_tokens + num_self_hrefs + num_keywords + kw_min_max + kw_max_avg + global_subjectivity + abs_title_sentiment_polarity + n_tokens_title + global_sentiment_polarity")  
 
 # Fitting the model with the training data 
@@ -320,11 +315,12 @@ channelIDs <- c("Entertainment", "Business", "Tech", "Lifestyle", "World", "Soci
 # Create file names
 output_file <- paste0(channelIDs, ".md")
 
+Commented out for the time being
 # Create a list for each channel with just the channel name
-params= lapply(channelIDs, FUN = function(x){list(channel=x)})
+# params= lapply(channelIDs, FUN = function(x){list(channel=x)})  
 
-# Put into a data frame
-reports <- tibble(output_file, params)
+# Put into a data frame  
+# reports <- tibble(output_file, params)
 ```
 
 
