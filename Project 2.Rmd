@@ -2,7 +2,7 @@
 title: "Project Two"
 author: "Mary Brown and Jennifer Relihan"
 date: "10/21/2021"
-output: html_document
+output: github_document
 params:
   channel: "Entertainment"
 ---
@@ -63,6 +63,7 @@ TrainData <- EntertainmentChannel[DataIndex,]
 TestData <- EntertainmentChannel[-DataIndex,]  
 dim(TrainData)  
 dim(TestData)
+
 ```  
 
 
@@ -210,7 +211,7 @@ rfFit
 
 
 ## Boosted Tree Model
-### The boosted tree model is a way to slowly train a tree so that you don't overfit. Here we use cross validation to determine the best tuning parameters - shrinkage(λ), n.trees(B), and interaction.depth (related to d). Then we take those tuning parameters and fit the model.Then we predict shares on the test data using the best model. 
+### The boosted tree model is a way to slowly train a tree so that you don't overfit. Here we use cross validation to determine the best tuning parameters - shrinkage(λ - slows the fitting process), n.trees(B- how many times it's repeated), and interaction.depth (related to d). Then we take those tuning parameters and fit the model.Then we predict shares on the test data using the best model. 
 ```{r}
 
 # Parameter tuning using 10-fold cross validation to determine parameter values for fitting the boosted tree model
@@ -285,5 +286,29 @@ FinalWinner
 ```  
 
 
+## Automation
+```{r}
+# Making a column in the Data table with the name of the data channel.
+Data<- Data %>% mutate(channel = ifelse(data_channel_is_lifestyle ==1, 'Lifestyle',
+                               ifelse(data_channel_is_entertainment ==1, 'Entertainment',
+                                    ifelse(data_channel_is_bus==1, "Business", 
+                                    ifelse(data_channel_is_socmed ==1, "Social Media",
+                                    ifelse(data_channel_is_tech ==1, "Tech",
+                                    ifelse(data_channel_is_world ==1, "World", "Null"  
+                                           )))))))
+
+# Get unique channels
+channelIDs <- unique(Data$channel)
+# Removing Null values
+channelIDs <- c("Entertainment", "Business", "Tech", "Lifestyle", "World", "Social Media")
+# Create file names
+output_file <- paste0(channelIDs, ".md")
+
+# Create a list for each channel with just the channel name
+params= lapply(channelIDs, FUN = function(x){list(channel=x)})
+
+# Put into a data frame
+reports <- tibble(output_file, params)
+```
 
 
