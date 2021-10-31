@@ -240,14 +240,9 @@ boostFit_best <- gbm(shares ~ .,
                      n.trees = n.tress_best,
                      shrinkage = shrinkage_best,
                      interaction.depth = interaction.depth_best)
-
-# Predict 
-boostPred <- predict(boostFit_best, newdata =select(TestData, ,-shares), n.trees = n.tress_best)
-# RMSE Value for boosted tree model
-boostRMSE <- sqrt(mean((boostPred- TestData$shares)^2))
 ```  
 
-## Comparisons  
+## Predictions 
 ### Predictions with the 4 models 
 ```{r, echo=TRUE, cache = TRUE, message = FALSE}  
 # Prediction on the first linear model  
@@ -257,18 +252,19 @@ A <- postResample(pred, obs = TestData$shares)
 pred2 <- predict(fit2, newdata = TestData)  
 B <- postResample(pred2, obs = TestData$shares)  
 
-pred3 <- predict(rfFit, newdata = TestData)  
+pred3 <- predict(rfFit, newdata = select(TestData, -shares))  
 C <- postResample(pred3, obs = TestData$shares)
 
-pred4 <- predict(boostFit_best, newdata = TestData)  
+pred4 <- predict(boostFit_best, newdata = select(TestData, -shares), n.trees = n.tress_best)  
 D <- postResample(pred4, obs = TestData$shares)  
 
 # A table of all prediction results  
 Predictions <- t(rbind(A[1], B[1], C[1], D[1]))  
 colnames(Predictions) <- c("Linear Model 1", "Linear Model 2", "Random Forest Model", "Boosted Tree Model")  
-Predictions
+Predictions  
 ```  
 
+## Comparison
 ### RMSE comparison to declare a model winner  
 ```{r, echo=TRUE}  
 # RMSE comparison
@@ -277,11 +273,10 @@ LR2results <- sqrt(mean((pred2 - TestData$shares)^2))
 RFresults <- sqrt(mean((pred3 - TestData$shares)^2))
 BTresults <- sqrt(mean((pred4 - TestData$shares)^2))  
 
-# Make a table of results from the above 
-FinalResults <- c(FirstLinearModel = LR1results, SecondLinearModel = LR2results, RandomForestResults = RFresults, BoostedTreeResults = BTresults)  
-FinalWinner <- as.data.frame(FinalResults) 
-attributes(FinalWinner)$names[1] <- "Final RMSE Results"
-FinalWinner
+# Make a table of results from the above  
+FinalResults <- rbind(LR1results, LR2results, RFresults, BTresults)
+row.names(FinalResults2) <- c("Linear 1", "Linear 2", "RF Model", "BT Model")  
+knitr::kable(FinalResults2, digits = 4, caption = "This table shows RMSE comparisons of each model. The model with the lowest RMSE value is declared the winning model.")
 ```  
 
 

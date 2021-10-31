@@ -263,7 +263,7 @@ DaysPlot <- TrainData %>% ggplot(aes(x = weekday, y = shares)) + geom_bar(stat =
 print(DaysPlot)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-97-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
 # Plot 2:
@@ -272,7 +272,7 @@ PopularityPlot <- TrainData %>% ggplot(aes(x = weekday)) + geom_bar(aes(fill = a
 print(PopularityPlot)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-97-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
 ``` r
 # Plot 3:
@@ -281,7 +281,7 @@ Videos <- TrainData %>% ggplot(aes(x = num_videos, y = shares)) + geom_bar(stat 
 print(Videos)  
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-97-3.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-3.png)<!-- -->
 
 ``` r
 # Plot 4:
@@ -290,7 +290,7 @@ Images <- TrainData %>% ggplot(aes(x = num_imgs, y = shares)) + geom_bar(stat = 
 print(Images) 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-97-4.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-4.png)<!-- -->
 
 ``` r
 # Plot 5:
@@ -302,7 +302,7 @@ Num_words <- ggplot(TrainData, aes(x=n_tokens_content, y=shares))+ geom_bar(stat
 Num_words
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-97-5.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-5.png)<!-- -->
 
 ``` r
 # Plot 6:
@@ -311,7 +311,7 @@ positivity <- ggplot(TrainData, aes(x=global_rate_positive_words, y=shares))+ ge
 positivity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-97-6.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-6.png)<!-- -->
 
 ``` r
 # Plot 7:
@@ -320,7 +320,7 @@ negativity <- ggplot(TrainData, aes(x=global_rate_negative_words, y=shares))+ ge
 negativity
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-97-7.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-7.png)<!-- -->
 
 ``` r
 # Putting Plots 4 and 5 together to review side by side.Here you can review the shares by the rate of positive or negative content. Another point of review is to look at the rate of positive or negative words based off of the channel type. For instance, entertainment articles have a max rate of 0.10 positive content and a max rate of 0.093 for negative words in this training data set. We can see that the site Mashable tends to write more positive content for entertainment.
@@ -328,7 +328,7 @@ pos_neg_join <- ggpubr::ggarrange(positivity, negativity,ncol=2)
 pos_neg_join
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-97-8.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-8.png)<!-- -->
 
 ## Linear Regression Models
 
@@ -639,14 +639,9 @@ boostFit_best <- gbm(shares ~ .,
                      n.trees = n.tress_best,
                      shrinkage = shrinkage_best,
                      interaction.depth = interaction.depth_best)
-
-# Predict 
-boostPred <- predict(boostFit_best, newdata =select(TestData, ,-shares), n.trees = n.tress_best)
-# RMSE Value for boosted tree model
-boostRMSE <- sqrt(mean((boostPred- TestData$shares)^2))
 ```
 
-## Comparisons
+## Predictions
 
 ### Predictions with the 4 models
 
@@ -658,20 +653,22 @@ A <- postResample(pred, obs = TestData$shares)
 pred2 <- predict(fit2, newdata = TestData)  
 B <- postResample(pred2, obs = TestData$shares)  
 
-pred3 <- predict(rfFit, newdata = TestData)  
+pred3 <- predict(rfFit, newdata = select(TestData, -shares))  
 C <- postResample(pred3, obs = TestData$shares)
 
-pred4 <- predict(boostFit_best, newdata = TestData)  
+pred4 <- predict(boostFit_best, newdata = select(TestData, -shares), n.trees = n.tress_best)  
 D <- postResample(pred4, obs = TestData$shares)  
 
 # A table of all prediction results  
 Predictions <- t(rbind(A[1], B[1], C[1], D[1]))  
 colnames(Predictions) <- c("Linear Model 1", "Linear Model 2", "Random Forest Model", "Boosted Tree Model")  
-Predictions
+Predictions  
 ```
 
     ##      Linear Model 1 Linear Model 2 Random Forest Model Boosted Tree Model
     ## RMSE       14954.05        7432.89            7334.508           7528.559
+
+## Comparison
 
 ### RMSE comparison to declare a model winner
 
@@ -682,15 +679,18 @@ LR2results <- sqrt(mean((pred2 - TestData$shares)^2))
 RFresults <- sqrt(mean((pred3 - TestData$shares)^2))
 BTresults <- sqrt(mean((pred4 - TestData$shares)^2))  
 
-# Make a table of results from the above 
-FinalResults <- c(FirstLinearModel = LR1results, SecondLinearModel = LR2results, RandomForestResults = RFresults, BoostedTreeResults = BTresults)  
-FinalWinner <- as.data.frame(FinalResults) 
-attributes(FinalWinner)$names[1] <- "Final RMSE Results"
-FinalWinner
+# Make a table of results from the above  
+FinalResults <- rbind(LR1results, LR2results, RFresults, BTresults)
+row.names(FinalResults2) <- c("Linear 1", "Linear 2", "RF Model", "BT Model")  
+knitr::kable(FinalResults2, digits = 4, caption = "This table shows RMSE comparisons of each model. The model with the lowest RMSE value is declared the winning model.")
 ```
 
-    ##                     Final RMSE Results
-    ## FirstLinearModel             14954.049
-    ## SecondLinearModel             7432.890
-    ## RandomForestResults           7334.508
-    ## BoostedTreeResults            7528.559
+|          |           |
+|:---------|----------:|
+| Linear 1 | 14954.049 |
+| Linear 2 |  7432.890 |
+| RF Model |  7334.508 |
+| BT Model |  7528.559 |
+
+This table shows RMSE comparisons of each model. The model with the
+lowest RMSE value is declared the winning model.

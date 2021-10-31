@@ -734,13 +734,8 @@ body {
 <span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">distribution =</span> <span class="st">&quot;gaussian&quot;</span>,</span>
 <span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n.trees =</span> n.tress_best,</span>
 <span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">shrinkage =</span> shrinkage_best,</span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">interaction.depth =</span> interaction.depth_best)</span>
-<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict </span></span>
-<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>boostPred <span class="ot">&lt;-</span> <span class="fu">predict</span>(boostFit_best, <span class="at">newdata =</span><span class="fu">select</span>(TestData, ,<span class="sc">-</span>shares), <span class="at">n.trees =</span> n.tress_best)</span>
-<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="co"># RMSE Value for boosted tree model</span></span>
-<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>boostRMSE <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((boostPred<span class="sc">-</span> TestData<span class="sc">$</span>shares)<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
-<h2 id="comparisons">Comparisons</h2>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">interaction.depth =</span> interaction.depth_best)</span></code></pre></div>
+<h2 id="predictions">Predictions</h2>
 <h3 id="predictions-with-the-4-models">Predictions with the 4 models</h3>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prediction on the first linear model  </span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit1, <span class="at">newdata =</span> TestData)  </span>
@@ -749,18 +744,19 @@ body {
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>pred2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit2, <span class="at">newdata =</span> TestData)  </span>
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">postResample</span>(pred2, <span class="at">obs =</span> TestData<span class="sc">$</span>shares)  </span>
 <span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>pred3 <span class="ot">&lt;-</span> <span class="fu">predict</span>(rfFit, <span class="at">newdata =</span> TestData)  </span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>pred3 <span class="ot">&lt;-</span> <span class="fu">predict</span>(rfFit, <span class="at">newdata =</span> <span class="fu">select</span>(TestData, <span class="sc">-</span>shares))  </span>
 <span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fu">postResample</span>(pred3, <span class="at">obs =</span> TestData<span class="sc">$</span>shares)</span>
 <span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>pred4 <span class="ot">&lt;-</span> <span class="fu">predict</span>(boostFit_best, <span class="at">newdata =</span> TestData)  </span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>pred4 <span class="ot">&lt;-</span> <span class="fu">predict</span>(boostFit_best, <span class="at">newdata =</span> <span class="fu">select</span>(TestData, <span class="sc">-</span>shares), <span class="at">n.trees =</span> n.tress_best)  </span>
 <span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">postResample</span>(pred4, <span class="at">obs =</span> TestData<span class="sc">$</span>shares)  </span>
 <span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a><span class="co"># A table of all prediction results  </span></span>
 <span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>Predictions <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">rbind</span>(A[<span class="dv">1</span>], B[<span class="dv">1</span>], C[<span class="dv">1</span>], D[<span class="dv">1</span>]))  </span>
 <span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Predictions) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Linear Model 1&quot;</span>, <span class="st">&quot;Linear Model 2&quot;</span>, <span class="st">&quot;Random Forest Model&quot;</span>, <span class="st">&quot;Boosted Tree Model&quot;</span>)  </span>
-<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>Predictions</span></code></pre></div>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>Predictions  </span></code></pre></div>
 <pre><code>##      Linear Model 1 Linear Model 2 Random Forest Model Boosted Tree Model
 ## RMSE       14954.05        7432.89            7334.508           7528.559</code></pre>
+<h2 id="comparison">Comparison</h2>
 <h3 id="rmse-comparison-to-declare-a-model-winner">RMSE comparison to declare a model winner</h3>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RMSE comparison</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>LR1results <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((pred <span class="sc">-</span> TestData<span class="sc">$</span>shares)<span class="sc">^</span><span class="dv">2</span>))</span>
@@ -768,16 +764,31 @@ body {
 <span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>RFresults <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((pred3 <span class="sc">-</span> TestData<span class="sc">$</span>shares)<span class="sc">^</span><span class="dv">2</span>))</span>
 <span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>BTresults <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((pred4 <span class="sc">-</span> TestData<span class="sc">$</span>shares)<span class="sc">^</span><span class="dv">2</span>))  </span>
 <span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a table of results from the above </span></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>FinalResults <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">FirstLinearModel =</span> LR1results, <span class="at">SecondLinearModel =</span> LR2results, <span class="at">RandomForestResults =</span> RFresults, <span class="at">BoostedTreeResults =</span> BTresults)  </span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>FinalWinner <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(FinalResults) </span>
-<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="fu">attributes</span>(FinalWinner)<span class="sc">$</span>names[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;Final RMSE Results&quot;</span></span>
-<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>FinalWinner</span></code></pre></div>
-<pre><code>##                     Final RMSE Results
-## FirstLinearModel             14954.049
-## SecondLinearModel             7432.890
-## RandomForestResults           7334.508
-## BoostedTreeResults            7528.559</code></pre>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a table of results from the above  </span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>FinalResults <span class="ot">&lt;-</span> <span class="fu">rbind</span>(LR1results, LR2results, RFresults, BTresults)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(FinalResults2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Linear 1&quot;</span>, <span class="st">&quot;Linear 2&quot;</span>, <span class="st">&quot;RF Model&quot;</span>, <span class="st">&quot;BT Model&quot;</span>)  </span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(FinalResults2, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;This table shows RMSE comparisons of each model. The model with the lowest RMSE value is declared the winning model.&quot;</span>)</span></code></pre></div>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">Linear 1</td>
+<td align="right">14954.049</td>
+</tr>
+<tr class="even">
+<td align="left">Linear 2</td>
+<td align="right">7432.890</td>
+</tr>
+<tr class="odd">
+<td align="left">RF Model</td>
+<td align="right">7334.508</td>
+</tr>
+<tr class="even">
+<td align="left">BT Model</td>
+<td align="right">7528.559</td>
+</tr>
+</tbody>
+</table>
+<p>This table shows RMSE comparisons of each model. The model with the lowest RMSE value is declared the winning model.</p>
 
 </body>
 </html>
