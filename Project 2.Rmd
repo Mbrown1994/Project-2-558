@@ -320,11 +320,14 @@ channelIDs <- c("Entertainment", "Business", "Tech", "Lifestyle", "World", "Soci
 # Create file names
 output_file <- paste0(channelIDs, ".md")
 
-# Create a list for each channel with just the channel name
-params= lapply(channelIDs, FUN = function(x){list(channel=x)})
+# Create a list for each channel with just the channel name (COMMENTED OUT FOR THE TIME BEING)
+#params= lapply(channelIDs, FUN = function(x){list(channel=x)})
+
 
 # Put into a data frame
-reports <- tibble(output_file, params)
+reports <- tibble(output_file, channelIDs)
+# rename channelid column to params
+colnames(reports) <- c("output_file", "params")
 ```
 
 
