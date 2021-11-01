@@ -26,12 +26,12 @@ library(shiny)
 
 ## Links to each seperate analysis
 
-- The analysis for [Entertainment articles is available here](Entertainment.html)
-- The analysis for [Business articles is available here](Business.html)
-- The analysis for [Lifestyle articles is available here](Lifestyle.html)
-- The analysis for [Social Media articles is available here](Social%20Media.html)
-- The analysis for [Tech articles is available here](Tech.html)
-- The analysis for [World articles is available here](World.html)
+- The analysis for [Entertainment articles is available here](Entertainment.md)
+- The analysis for [Business articles is available here](Business.md)
+- The analysis for [Lifestyle articles is available here](Lifestyle.md)
+- The analysis for [Social Media articles is available here](Social%20Media.md)
+- The analysis for [Tech articles is available here](Tech.md)
+- The analysis for [World articles is available here](World.md)
 
 ## Code used for automation
 ``` r
