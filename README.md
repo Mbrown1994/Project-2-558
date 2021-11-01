@@ -26,7 +26,7 @@ library(shiny)
 
 ## Links to each seperate analysis
 
-- The analysis for [Entertainment articles is available here](https://github.com/Mbrown1994/Project-2-558/blob/main/Entertainment.html)
+- The analysis for [Entertainment articles is available here](Entertainment.html)
 - The analysis for [Business articles is available here](https://github.com/Mbrown1994/Project-2-558/blob/main/Business.html)
 - The analysis for [Lifestyle articles is available here](https://github.com/Mbrown1994/Project-2-558/blob/main/Lifestyle.html)
 - The analysis for [Social Media articles is available here](https://github.com/Mbrown1994/Project-2-558/blob/main/Social%20Media.html)
