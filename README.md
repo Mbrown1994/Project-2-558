@@ -27,11 +27,11 @@ library(shiny)
 ## Links to each seperate analysis
 
 - The analysis for [Entertainment articles is available here](Entertainment.html)
-- The analysis for [Business articles is available here](https://github.com/Mbrown1994/Project-2-558/blob/main/Business.md)
-- The analysis for [Lifestyle articles is available here](https://github.com/Mbrown1994/Project-2-558/blob/main/Lifestyle.html)
-- The analysis for [Social Media articles is available here](https://github.com/Mbrown1994/Project-2-558/blob/main/Social%20Media.html)
-- The analysis for [Tech articles is available here](https://github.com/Mbrown1994/Project-2-558/blob/main/Tech.html)
-- The analysis for [World articles is available here](https://github.com/Mbrown1994/Project-2-558/blob/main/World.html)
+- The analysis for [Business articles is available here](Business.html)
+- The analysis for [Lifestyle articles is available here](Lifestyle.html)
+- The analysis for [Social Media articles is available here](Social Media.html)
+- The analysis for [Tech articles is available here](Tech.html)
+- The analysis for [World articles is available here](World.html)
 
 ## Code used for automation
 ``` r
