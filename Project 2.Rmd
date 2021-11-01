@@ -72,9 +72,9 @@ Data <- Data %>% select(-url, -timedelta)
 ##################################################
 
 #Adding in Automation:
-params$channel
+channel_of_interest <- params$channel
 # Subset the data by channels and remove columns starting with "data_channel_is"  
-channelData <- Data %>% filter(channel == params$channel) %>% select(-starts_with("data_channel_is_"))
+channelData <- Data %>% filter(channel == channel_of_interest) %>% select(-starts_with("data_channel_is_"))
 
 ##################################################
 
